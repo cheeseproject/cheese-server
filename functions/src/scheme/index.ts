@@ -1,6 +1,7 @@
 import { Timestamp } from "firebase-admin/firestore"
 
 // root collection
+// id: uid
 export type UserDocument = {
   name: string
   iconPath: string
@@ -9,6 +10,7 @@ export type UserDocument = {
 }
 
 // root collection
+// id: snapPostId
 export type SnapPostDocument = {
   title: string
   comment: string | null
@@ -20,6 +22,7 @@ export type SnapPostDocument = {
     imagePath: string
     tags: string[]
   }[]
+  likedCount: number
   postedUser: {
     userId: string
     userRef: FirebaseFirestore.DocumentReference
@@ -32,6 +35,7 @@ export type SnapPostDocument = {
 }
 
 // sub collection of users
+// id: snapRouteId
 export type SnapRouteDocument = {
   title: string
   createdAt: Timestamp
@@ -43,15 +47,15 @@ export type SnapRouteDocument = {
 }
 
 // sub collection of users
+// id: snapPostId
 export type LikedSnapPostDocument = {
   likedAt: Timestamp
-  snapPostId: string
   snapPostRef: FirebaseFirestore.DocumentReference
 }
 
 // sub collection of users
+// id: snapPostId
 export type DislikedSnapPostDocument = {
   dislikedAt: Timestamp
-  snapPostId: string
   snapPostRef: FirebaseFirestore.DocumentReference
 }
