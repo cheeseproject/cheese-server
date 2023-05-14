@@ -25,7 +25,7 @@ export type SnapPostDocument = {
   likedCount: number
   postedUser: {
     userId: string
-    userRef: FirebaseFirestore.DocumentReference
+    // userRef: FirebaseFirestore.DocumentReference
     // userDocument
     name: string
     iconPath: string
