@@ -12,4 +12,8 @@ export class User {
   public toPostUser(): PostUser {
     return new PostUser(this.userId, this.name, this.iconPath, this.resistedAt, this.updatedAt)
   }
+
+  public updateProfile(name: string, iconPath: string): User {
+    return new User(this.userId, name, iconPath, this.resistedAt, new Date())
+  }
 }
