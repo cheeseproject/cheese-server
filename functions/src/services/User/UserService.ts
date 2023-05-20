@@ -1,18 +1,22 @@
 import { User } from "../../domain/User"
+import { Exception } from "../../libs/Exception"
 import { userRepository } from "../../repositories/User/UserRepository"
 import { UserParams } from "./UserParams"
 
 class UserService {
-  private USER_NOT_FOUND_ERROR = "user not found"
   public save = async (params: UserParams, userId: string) => {
-    const user = new User(userId, params.name, params.iconPath, new Date(), new Date())
-    await userRepository.save(user)
+    const user = await userRepository.findById(userId)
+    if (user) {
+      Exception.alreadyExists("user")
+    }
+    const newUser = new User(userId, params.name, params.iconPath, new Date(), new Date())
+    await userRepository.save(newUser)
   }
 
   public findById = async (userId: string) => {
     const user = await userRepository.findById(userId)
     if (!user) {
-      throw new Error(this.USER_NOT_FOUND_ERROR)
+      Exception.notFound("user")
     }
     return user
   }
@@ -20,9 +24,9 @@ class UserService {
   public update = async (params: UserParams, userId: string) => {
     const user = await userRepository.findById(userId)
     if (!user) {
-      throw new Error(this.USER_NOT_FOUND_ERROR)
+      Exception.notFound("user")
     }
-    const updatedUser = user.updateProfile(params.name, params.iconPath)
+    const updatedUser = user.edit(params.name, params.iconPath)
     await userRepository.update(updatedUser)
   }
 }
