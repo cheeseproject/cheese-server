@@ -15,4 +15,38 @@ export class SnapPost {
     readonly likedCount: LikedCount,
     readonly postedUser: PostUser
   ) {}
+
+  public edited(title: string, comment: string | undefined, postImages: PostImages[]): SnapPost {
+    return new SnapPost(
+      this.snapPostId,
+      title,
+      comment,
+      this.postedAt,
+      new Date(),
+      this.longitude,
+      this.latitude,
+      postImages,
+      this.likedCount,
+      this.postedUser
+    )
+  }
+
+  public liked(): SnapPost {
+    return new SnapPost(
+      this.snapPostId,
+      this.title,
+      this.comment,
+      this.postedAt,
+      this.updatedAt,
+      this.longitude,
+      this.latitude,
+      this.postImages,
+      this.likedCount.increment(),
+      this.postedUser
+    )
+  }
+
+  public isMine(userId: string): boolean {
+    return this.postedUser.userId === userId
+  }
 }
