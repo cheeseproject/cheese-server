@@ -48,14 +48,34 @@ export type SnapRouteDocument = {
 
 // sub collection of users
 // id: snapPostId
-export type LikedSnapPostDocument = {
+export type likedSnapPostDocument = {
   likedAt: Timestamp
-  snapPostRef: FirebaseFirestore.DocumentReference
+  // snapPostDocument
+  snapPost: {
+    title: string
+    comment: string | null
+    postedAt: Timestamp
+    updatedAt: Timestamp
+    longitude: number
+    latitude: number
+    postImages: {
+      imagePath: string
+      tags: string[]
+    }[]
+    likedCount: number
+    postedUser: {
+      userId: string
+      // userRef: FirebaseFirestore.DocumentReference
+      // userDocument
+      name: string
+      iconPath: string
+      resistedAt: Timestamp
+      updatedAt: Timestamp
+    }
+  }
 }
 
-// sub collection of users
-// id: snapPostId
-export type DislikedSnapPostDocument = {
-  dislikedAt: Timestamp
-  snapPostRef: FirebaseFirestore.DocumentReference
+export type UpdateSnapPostLogDocument = {
+  userId: string
+  snapPostId: string
 }
