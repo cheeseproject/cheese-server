@@ -29,8 +29,6 @@ export const LikedSnapPostConverter = {
           userId: post.postedUser.userId,
           name: post.postedUser.name,
           iconPath: post.postedUser.iconPath,
-          resistedAt: dateToTimestamp(post.postedUser.resistedAt),
-          updatedAt: dateToTimestamp(post.postedUser.updatedAt),
         },
       },
     }
@@ -51,13 +49,7 @@ export const LikedSnapPostConverter = {
         return new PostImages(postImage.imagePath, postImage.tags)
       }),
       new LikedCount(snapPost.likedCount),
-      new PostUser(
-        snapPost.postedUser.userId,
-        snapPost.postedUser.name,
-        snapPost.postedUser.iconPath,
-        snapPost.postedUser.resistedAt.toDate(),
-        snapPost.postedUser.updatedAt.toDate()
-      )
+      new PostUser(snapPost.postedUser.userId, snapPost.postedUser.name, snapPost.postedUser.iconPath)
     )
   },
 }
