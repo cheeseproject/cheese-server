@@ -10,7 +10,7 @@ export class User {
   ) {}
 
   public toPostUser(): PostUser {
-    return new PostUser(this.userId, this.name, this.iconPath, this.resistedAt, this.updatedAt)
+    return new PostUser(this.userId, this.name, this.iconPath)
   }
 
   public edit(name: string, iconPath: string): User {

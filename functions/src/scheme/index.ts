@@ -25,12 +25,9 @@ export type SnapPostDocument = {
   likedCount: number
   postedUser: {
     userId: string
-    // userRef: FirebaseFirestore.DocumentReference
     // userDocument
     name: string
     iconPath: string
-    resistedAt: Timestamp
-    updatedAt: Timestamp
   }
 }
 
@@ -65,12 +62,9 @@ export type likedSnapPostDocument = {
     likedCount: number
     postedUser: {
       userId: string
-      // userRef: FirebaseFirestore.DocumentReference
       // userDocument
       name: string
       iconPath: string
-      resistedAt: Timestamp
-      updatedAt: Timestamp
     }
   }
 }
