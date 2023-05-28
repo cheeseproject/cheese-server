@@ -1,3 +1,4 @@
+import { FieldPath } from "firebase-admin/firestore"
 import { SnapPost } from "../../domain/SnapPost/SnapPost"
 import { db } from "../../firebase/config"
 import { LikedSnapPostConverter } from "../User/LikedSnapPostConverter"
@@ -38,6 +39,14 @@ export class SnapPostRepository {
   public async findByUserId(userId: string): Promise<SnapPost[]> {
     const snapshot = await this.collectionRef
       .where("postUser.userId", "==", userId)
+      .withConverter(SnapPostConverter)
+      .get()
+    return snapshot.docs.map((doc) => doc.data())
+  }
+
+  public async findByIds(snapPostIds: string[]): Promise<SnapPost[]> {
+    const snapshot = await this.collectionRef
+      .where(FieldPath.documentId(), "in", snapPostIds)
       .withConverter(SnapPostConverter)
       .get()
     return snapshot.docs.map((doc) => doc.data())
