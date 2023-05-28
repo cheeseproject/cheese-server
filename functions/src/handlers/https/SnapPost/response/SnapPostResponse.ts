@@ -21,8 +21,6 @@ export const SnapPostResponseScheme = z.object({
     userId: z.string(),
     name: z.string(),
     iconPath: z.string(),
-    resistedAt: z.date(),
-    updatedAt: z.date(),
   }),
 })
 
@@ -47,8 +45,6 @@ export const toSnapPostResponse = (snapPost: SnapPost): SnapPostResponse => {
       userId: snapPost.postedUser.userId,
       name: snapPost.postedUser.name,
       iconPath: snapPost.postedUser.iconPath,
-      resistedAt: snapPost.postedUser.resistedAt,
-      updatedAt: snapPost.postedUser.updatedAt,
     },
   }
   return response
