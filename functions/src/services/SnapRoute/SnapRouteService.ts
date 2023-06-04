@@ -38,7 +38,7 @@ class SnapRouteService {
       Exception.notFound("snapRoute")
     }
 
-    const updatedSnapRoute = snapRoute.edited(params.title, snapPosts)
+    const updatedSnapRoute = snapRoute.edit(params.title, snapPosts)
     await snapRouteRepository.save(updatedSnapRoute)
   }
 
