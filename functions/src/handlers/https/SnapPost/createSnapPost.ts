@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { TIME_ZONE, functions } from "../../../firebase/config"
+import { REGION, functions } from "../../../firebase/config"
 import { snapPostService } from "../../../services/SnapPost/SnapPostService"
 import { Validator } from "../../Validator"
 
@@ -16,7 +16,7 @@ const RequestScheme = z.object({
   ),
 })
 
-export const createSnapPost = functions.region(TIME_ZONE).https.onCall(async (data, context) => {
+export const createSnapPost = functions.region(REGION).https.onCall(async (data, context) => {
   const { userId } = Validator.auth(context)
   const params = Validator.scheme(data, RequestScheme)
   await snapPostService.save(params, userId)
