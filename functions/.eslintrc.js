@@ -20,6 +20,7 @@ module.exports = {
   },
   ignorePatterns: [
     "/lib/**/*", // Ignore built files.
+    "jest.config.js",
   ],
   plugins: ["@typescript-eslint", "import"],
   rules: {
@@ -31,4 +32,4 @@ module.exports = {
     semi: ["error", "never"],
     "require-jsdoc": 0,
   },
-};
+}
