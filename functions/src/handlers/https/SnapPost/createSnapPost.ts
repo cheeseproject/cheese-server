@@ -1,7 +1,7 @@
 import { z } from "zod"
-import { REGION, functions } from "../../../firebase/config"
 import { snapPostService } from "../../../services/SnapPost/SnapPostService"
 import { Validator } from "../../Validator"
+import { baseFunction } from "../../baseFunction"
 
 const RequestScheme = z.object({
   title: z.string(),
@@ -16,7 +16,7 @@ const RequestScheme = z.object({
   ),
 })
 
-export const createSnapPost = functions.region(REGION).https.onCall(async (data, context) => {
+export const createSnapPost = baseFunction(async (data, context) => {
   const { userId } = Validator.auth(context)
   const params = Validator.scheme(data, RequestScheme)
   await snapPostService.save(params, userId)

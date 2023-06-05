@@ -3,6 +3,7 @@ import { Validator } from "../../Validator"
 import { userService } from "../../../services/User/UserService"
 import { z } from "zod"
 import { toUserResponse } from "./response/UserResponse"
+import { baseFunction } from "../../baseFunction"
 
 /**
  * 自分のユーザー情報を取得する
@@ -21,7 +22,7 @@ const UserRequestScheme = z.object({
   userId: z.string(),
 })
 
-export const fetchUser = functions.region(REGION).https.onCall(async (data, context) => {
+export const fetchUser = baseFunction(async (data, context) => {
   Validator.auth(context)
   const params = Validator.scheme(data, UserRequestScheme)
   const user = await userService.findById(params.userId)

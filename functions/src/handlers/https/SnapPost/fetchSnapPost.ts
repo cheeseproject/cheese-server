@@ -1,13 +1,13 @@
 import { z } from "zod"
-import { REGION, functions } from "../../../firebase/config"
 import { snapPostService } from "../../../services/SnapPost/SnapPostService"
 import { Validator } from "../../Validator"
 import { toSnapPostResponse } from "./response/SnapPostResponse"
+import { baseFunction } from "../../baseFunction"
 
 /**
  * 自分の投稿を取得する
  */
-export const fetchMySnapPosts = functions.region(REGION).https.onCall(async (_, context) => {
+export const fetchMySnapPosts = baseFunction(async (_, context) => {
   const { userId } = Validator.auth(context)
   const snapPosts = await snapPostService.findByUserId(userId)
   return snapPosts.map((snapPost) => toSnapPostResponse(snapPost))
@@ -16,7 +16,7 @@ export const fetchMySnapPosts = functions.region(REGION).https.onCall(async (_, 
 /**
  * いいねした投稿を取得する
  */
-export const fetchLikedSnapPosts = functions.region(REGION).https.onCall(async (_, context) => {
+export const fetchLikedSnapPosts = baseFunction(async (_, context) => {
   const { userId } = Validator.auth(context)
   const snapPosts = await snapPostService.findLikeIdByUserId(userId)
   return snapPosts.map((snapPost) => toSnapPostResponse(snapPost))
@@ -30,7 +30,7 @@ const SnapPostRequestScheme = z.object({
   snapPostId: z.string(),
 })
 
-export const fetchSnapPost = functions.region(REGION).https.onCall(async (data, context) => {
+export const fetchSnapPost = baseFunction(async (data, context) => {
   Validator.auth(context)
   const params = Validator.scheme(data, SnapPostRequestScheme)
   const snapPost = await snapPostService.findById(params.snapPostId)

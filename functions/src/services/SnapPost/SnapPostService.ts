@@ -41,7 +41,6 @@ export class SnapPostService {
     if (!snapPost) {
       Exception.notFound("snap post")
     }
-
     const editedSnapPost = snapPost.edited(
       params.title,
       params.comment,

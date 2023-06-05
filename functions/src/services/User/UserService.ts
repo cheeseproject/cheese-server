@@ -10,7 +10,6 @@ class UserService {
       Exception.alreadyExists(`user: ${userId}`)
     }
     const newUser = new User(userId, params.name, params.iconPath, new Date(), new Date())
-    console.log(newUser)
     await userRepository.save(newUser)
   }
 
