@@ -1,5 +1,5 @@
-import * as firebase from "firebase-admin"
+import { Timestamp } from "firebase-admin/firestore"
 
-export const dateToTimestamp = (date: Date): firebase.firestore.Timestamp => {
-  return firebase.firestore.Timestamp.fromDate(date)
+export const dateToTimestamp = (date: Date): Timestamp => {
+  return Timestamp.fromDate(date)
 }

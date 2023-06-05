@@ -37,12 +37,9 @@ export class SnapPostService {
   }
 
   public async update(params: SnapPostParams, userId: string, snapPostId: string): Promise<void> {
-    const snapPost = await snapPostRepository.findById(snapPostId)
+    const snapPost = await snapPostRepository.findByIdAndUserId(userId, snapPostId)
     if (!snapPost) {
       Exception.notFound("snap post")
-    }
-    if (!snapPost.isMine(userId)) {
-      Exception.permissionDenied()
     }
     const editedSnapPost = snapPost.edited(
       params.title,

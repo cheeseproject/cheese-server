@@ -28,6 +28,15 @@ export class SnapPostRepository {
     return snapshot.data()
   }
 
+  public async findByIdAndUserId(userId: string, snapPostId: string): Promise<SnapPost | undefined> {
+    const snapshot = await this.collectionRef
+      .where(FieldPath.documentId(), "==", snapPostId)
+      .where("postUser.userId", "==", userId)
+      .withConverter(SnapPostConverter)
+      .get()
+    return snapshot.docs[0].data()
+  }
+
   public async findLikeIdByUserId(userId: string): Promise<SnapPost[]> {
     const snapshot = await this.userLikedRef(userId)
       .withConverter(LikedSnapPostConverter)

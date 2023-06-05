@@ -10,7 +10,7 @@ export class SnapRoute {
     readonly snapPosts: SnapPost[]
   ) {}
 
-  public edited(title: string, snapPosts: SnapPost[]): SnapRoute {
+  public edit(title: string, snapPosts: SnapPost[]): SnapRoute {
     return new SnapRoute(this.snapRouteId, title, this.createdUserId, this.createdAt, new Date(), snapPosts)
   }
 }

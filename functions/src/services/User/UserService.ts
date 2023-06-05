@@ -7,7 +7,7 @@ class UserService {
   public save = async (params: UserParams, userId: string) => {
     const user = await userRepository.findById(userId)
     if (user) {
-      Exception.alreadyExists("user")
+      Exception.alreadyExists(`user: ${userId}`)
     }
     const newUser = new User(userId, params.name, params.iconPath, new Date(), new Date())
     await userRepository.save(newUser)
@@ -16,7 +16,7 @@ class UserService {
   public findById = async (userId: string) => {
     const user = await userRepository.findById(userId)
     if (!user) {
-      Exception.notFound("user")
+      Exception.notFound(`user: ${userId}`)
     }
     return user
   }
@@ -24,7 +24,7 @@ class UserService {
   public update = async (params: UserParams, userId: string) => {
     const user = await userRepository.findById(userId)
     if (!user) {
-      Exception.notFound("user")
+      Exception.notFound(`user: ${userId}`)
     }
     const updatedUser = user.edit(params.name, params.iconPath)
     await userRepository.update(updatedUser)
