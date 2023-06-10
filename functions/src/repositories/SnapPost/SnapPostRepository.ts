@@ -2,7 +2,7 @@ import { FieldPath } from "firebase-admin/firestore"
 import { SnapPost } from "../../domain/SnapPost/SnapPost"
 import { LikedSnapPostConverter } from "../User/LikedSnapPostConverter"
 import { SnapPostChangeLogConverter, SnapPostConverter } from "./SnapPostConverter"
-import { groupReferences, references } from "../../scheme/"
+import { references } from "../../scheme/"
 
 export class SnapPostRepository {
   public async save(snapPost: SnapPost): Promise<void> {
