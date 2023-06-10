@@ -3,12 +3,12 @@ import { snapPostService } from "../../../services/SnapPost/SnapPostService"
 import { Validator } from "../../Validator"
 import { baseFunction } from "../../baseFunction"
 
-const RequestScheme = z.object({
+const DeleteSnapPostRequestScheme = z.object({
   snapPostId: z.string(),
 })
 
 export const deleteSnapPost = baseFunction(async (data, context) => {
   const { userId } = Validator.auth(context)
-  const params = Validator.scheme(data, RequestScheme)
+  const params = Validator.scheme(data, DeleteSnapPostRequestScheme)
   await snapPostService.delete(userId, params.snapPostId)
 })

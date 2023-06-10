@@ -7,13 +7,13 @@ import { baseFunction } from "../../baseFunction"
 /**
  * ルートを取得する
  */
-const SnapRouteRequestScheme = z.object({
+const FetchSnapRouteRequestScheme = z.object({
   snapRouteId: z.string(),
 })
 
 export const fetchSnapRoute = baseFunction(async (data, context) => {
   const { userId } = Validator.auth(context)
-  const params = Validator.scheme(data, SnapRouteRequestScheme)
+  const params = Validator.scheme(data, FetchSnapRouteRequestScheme)
   const snapRoute = await snapRouteService.findByIdAndUserId(userId, params.snapRouteId)
   return toSnapRouteResponse(snapRoute)
 })

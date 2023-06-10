@@ -4,7 +4,7 @@ import { SnapPost } from "../../../../domain/SnapPost/SnapPost"
 export const SnapPostResponseScheme = z.object({
   snapPostId: z.string(),
   userId: z.string(),
-  images: z.array(
+  postImages: z.array(
     z.object({
       imagePath: z.string(),
       tags: z.array(z.string()),
@@ -14,8 +14,8 @@ export const SnapPostResponseScheme = z.object({
   comment: z.string().optional(),
   longitude: z.number(),
   latitude: z.number(),
-  postedAt: z.date(),
-  updatedAt: z.date(),
+  postedAt: z.string(),
+  updatedAt: z.string(),
   likedCount: z.number(),
   postedUser: z.object({
     userId: z.string(),
@@ -30,7 +30,7 @@ export const toSnapPostResponse = (snapPost: SnapPost): SnapPostResponse => {
   const response: SnapPostResponse = {
     snapPostId: snapPost.snapPostId,
     userId: snapPost.postedUser.userId,
-    images: snapPost.postImages.map((postImage) => ({
+    postImages: snapPost.postImages.map((postImage) => ({
       imagePath: postImage.imagePath,
       tags: postImage.tags,
     })),
@@ -38,8 +38,8 @@ export const toSnapPostResponse = (snapPost: SnapPost): SnapPostResponse => {
     comment: snapPost.comment,
     longitude: snapPost.longitude,
     latitude: snapPost.latitude,
-    postedAt: snapPost.postedAt,
-    updatedAt: snapPost.updatedAt,
+    postedAt: snapPost.postedAt.toISOString(),
+    updatedAt: snapPost.updatedAt.toISOString(),
     likedCount: snapPost.likedCount.value,
     postedUser: {
       userId: snapPost.postedUser.userId,
@@ -48,4 +48,12 @@ export const toSnapPostResponse = (snapPost: SnapPost): SnapPostResponse => {
     },
   }
   return response
+}
+
+export const SnapPostResponseListScheme = z.array(SnapPostResponseScheme)
+
+export type SnapPostResponseList = z.infer<typeof SnapPostResponseListScheme>
+
+export const toSnapPostResponseList = (snapPosts: SnapPost[]): SnapPostResponseList => {
+  return snapPosts.map((snapPost) => toSnapPostResponse(snapPost))
 }

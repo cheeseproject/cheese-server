@@ -7,12 +7,12 @@ import { baseFunction } from "../../baseFunction"
  * 投稿をいいねする
  */
 
-const LikeRequestScheme = z.object({
+const LikeSnapPostRequestScheme = z.object({
   snapPostIds: z.array(z.string()),
 })
 
 export const likeSnapPost = baseFunction(async (data, context) => {
   const { userId } = Validator.auth(context)
-  const params = Validator.scheme(data, LikeRequestScheme)
+  const params = Validator.scheme(data, LikeSnapPostRequestScheme)
   await snapPostService.like(userId, params.snapPostIds)
 })

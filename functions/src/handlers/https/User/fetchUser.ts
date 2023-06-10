@@ -1,14 +1,13 @@
-import { REGION, functions } from "../../../firebase/config"
 import { Validator } from "../../Validator"
 import { userService } from "../../../services/User/UserService"
 import { z } from "zod"
-import { toUserResponse } from "./response/UserResponse"
+import { UserResponse, toUserResponse } from "./response/UserResponse"
 import { baseFunction } from "../../baseFunction"
 
 /**
  * 自分のユーザー情報を取得する
  */
-export const fetchMyUser = functions.region(REGION).https.onCall(async (_, context) => {
+export const fetchMyUser = baseFunction<UserResponse>(async (_, context) => {
   const { userId } = Validator.auth(context)
   const user = await userService.findById(userId)
   return toUserResponse(user)
@@ -18,13 +17,13 @@ export const fetchMyUser = functions.region(REGION).https.onCall(async (_, conte
  * idでユーザーを取得する
  */
 
-const UserRequestScheme = z.object({
+const FetchUserRequestScheme = z.object({
   userId: z.string(),
 })
 
-export const fetchUser = baseFunction(async (data, context) => {
+export const fetchUser = baseFunction<UserResponse>(async (data, context) => {
   Validator.auth(context)
-  const params = Validator.scheme(data, UserRequestScheme)
+  const params = Validator.scheme(data, FetchUserRequestScheme)
   const user = await userService.findById(params.userId)
   return toUserResponse(user)
 })

@@ -5,7 +5,7 @@ import { SnapPostDocument } from "../../scheme"
 import { dateToTimestamp } from "../../libs/dateToTimestamp"
 import { Snapshot } from "../_types"
 import { LikedCount } from "../../domain/SnapPost/likedCount"
-import { PostUser } from "../../domain/PostUser"
+import { PostedUser } from "../../domain/PostedUser"
 
 export const SnapPostConverter = {
   toFirestore: (post: SnapPost): DocumentData => {
@@ -45,7 +45,7 @@ export const SnapPostConverter = {
         return new PostImages(postImage.imagePath, postImage.tags)
       }),
       new LikedCount(data.likedCount),
-      new PostUser(data.postedUser.userId, data.postedUser.name, data.postedUser.iconPath)
+      new PostedUser(data.postedUser.userId, data.postedUser.name, data.postedUser.iconPath)
     )
   },
 }

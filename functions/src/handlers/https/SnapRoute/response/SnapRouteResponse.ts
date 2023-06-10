@@ -6,8 +6,8 @@ export const SnapRouteResponseScheme = z.object({
   snapRouteId: z.string(),
   title: z.string(),
   createdUserId: z.string(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
   snapPosts: z.array(SnapPostResponseScheme),
 })
 
@@ -18,12 +18,12 @@ export const toSnapRouteResponse = (snapRoute: SnapRoute): SnapRouteResponse => 
     snapRouteId: snapRoute.snapRouteId,
     title: snapRoute.title,
     createdUserId: snapRoute.createdUserId,
-    createdAt: snapRoute.createdAt,
-    updatedAt: snapRoute.updatedAt,
+    createdAt: snapRoute.createdAt.toISOString(),
+    updatedAt: snapRoute.updatedAt.toISOString(),
     snapPosts: snapRoute.snapPosts.map((snapPost) => ({
       snapPostId: snapPost.snapPostId,
       userId: snapPost.postedUser.userId,
-      images: snapPost.postImages.map((postImage) => ({
+      postImages: snapPost.postImages.map((postImage) => ({
         imagePath: postImage.imagePath,
         tags: postImage.tags,
       })),
@@ -31,8 +31,8 @@ export const toSnapRouteResponse = (snapRoute: SnapRoute): SnapRouteResponse => 
       comment: snapPost.comment,
       longitude: snapPost.longitude,
       latitude: snapPost.latitude,
-      postedAt: snapPost.postedAt,
-      updatedAt: snapPost.updatedAt,
+      postedAt: snapPost.postedAt.toISOString(),
+      updatedAt: snapPost.updatedAt.toISOString(),
       likedCount: snapPost.likedCount.value,
       postedUser: {
         userId: snapPost.postedUser.userId,
@@ -43,3 +43,7 @@ export const toSnapRouteResponse = (snapRoute: SnapRoute): SnapRouteResponse => 
   }
   return response
 }
+
+export const SnapRouteResponseListScheme = z.array(SnapRouteResponseScheme)
+
+export type SnapRouteResponseList = z.infer<typeof SnapRouteResponseListScheme>

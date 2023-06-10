@@ -1,38 +1,43 @@
 import { z } from "zod"
 import { snapPostService } from "../../../services/SnapPost/SnapPostService"
 import { Validator } from "../../Validator"
-import { toSnapPostResponse } from "./response/SnapPostResponse"
+import {
+  SnapPostResponse,
+  SnapPostResponseList,
+  toSnapPostResponse,
+  toSnapPostResponseList,
+} from "./response/SnapPostResponse"
 import { baseFunction } from "../../baseFunction"
 
 /**
  * 自分の投稿を取得する
  */
-export const fetchMySnapPosts = baseFunction(async (_, context) => {
+export const fetchMySnapPosts = baseFunction<SnapPostResponseList>(async (_, context) => {
   const { userId } = Validator.auth(context)
   const snapPosts = await snapPostService.findByUserId(userId)
-  return snapPosts.map((snapPost) => toSnapPostResponse(snapPost))
+  return toSnapPostResponseList(snapPosts)
 })
 
 /**
  * いいねした投稿を取得する
  */
-export const fetchLikedSnapPosts = baseFunction(async (_, context) => {
+export const fetchLikedSnapPosts = baseFunction<SnapPostResponseList>(async (_, context) => {
   const { userId } = Validator.auth(context)
   const snapPosts = await snapPostService.findLikeIdByUserId(userId)
-  return snapPosts.map((snapPost) => toSnapPostResponse(snapPost))
+  return toSnapPostResponseList(snapPosts)
 })
 
 /**
  * 投稿を取得する
  */
 
-const SnapPostRequestScheme = z.object({
+const FetchSnapPostRequestScheme = z.object({
   snapPostId: z.string(),
 })
 
-export const fetchSnapPost = baseFunction(async (data, context) => {
+export const fetchSnapPost = baseFunction<SnapPostResponse>(async (data, context) => {
   Validator.auth(context)
-  const params = Validator.scheme(data, SnapPostRequestScheme)
+  const params = Validator.scheme(data, FetchSnapPostRequestScheme)
   const snapPost = await snapPostService.findById(params.snapPostId)
   return toSnapPostResponse(snapPost)
 })

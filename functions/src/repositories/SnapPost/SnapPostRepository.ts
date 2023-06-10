@@ -20,7 +20,7 @@ export class SnapPostRepository {
 
   public async saveLiked(userId: string, snapPost: SnapPost): Promise<void> {
     await this.connectLikedToUser(userId, snapPost)
-    await this.update(snapPost)
+    await this.save(snapPost)
   }
 
   public async findById(snapPostId: string): Promise<SnapPost | undefined> {
@@ -31,10 +31,10 @@ export class SnapPostRepository {
   public async findByIdAndUserId(userId: string, snapPostId: string): Promise<SnapPost | undefined> {
     const snapshot = await this.collectionRef
       .where(FieldPath.documentId(), "==", snapPostId)
-      .where("postUser.userId", "==", userId)
+      .where("postedUser.userId", "==", userId)
       .withConverter(SnapPostConverter)
       .get()
-    return snapshot.docs[0].data()
+    return snapshot.docs.length > 0 ? snapshot.docs[0].data() : undefined
   }
 
   public async findLikeIdByUserId(userId: string): Promise<SnapPost[]> {
@@ -47,7 +47,7 @@ export class SnapPostRepository {
 
   public async findByUserId(userId: string): Promise<SnapPost[]> {
     const snapshot = await this.collectionRef
-      .where("postUser.userId", "==", userId)
+      .where("postedUser.userId", "==", userId)
       .withConverter(SnapPostConverter)
       .get()
     return snapshot.docs.map((doc) => doc.data())
@@ -59,10 +59,6 @@ export class SnapPostRepository {
       .withConverter(SnapPostConverter)
       .get()
     return snapshot.docs.map((doc) => doc.data())
-  }
-
-  public async update(snapPost: SnapPost): Promise<void> {
-    await this.collectionRef.doc(snapPost.snapPostId).withConverter(SnapPostConverter).update(snapPost)
   }
 
   public async delete(snapPostId: string): Promise<void> {
