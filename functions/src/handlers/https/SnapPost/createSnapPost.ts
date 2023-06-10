@@ -3,7 +3,7 @@ import { snapPostService } from "../../../services/SnapPost/SnapPostService"
 import { Validator } from "../../Validator"
 import { baseFunction } from "../../baseFunction"
 
-const RequestScheme = z.object({
+const CreateSnapPostRequestScheme = z.object({
   title: z.string(),
   comment: z.string(),
   longitude: z.number(),
@@ -18,6 +18,6 @@ const RequestScheme = z.object({
 
 export const createSnapPost = baseFunction(async (data, context) => {
   const { userId } = Validator.auth(context)
-  const params = Validator.scheme(data, RequestScheme)
+  const params = Validator.scheme(data, CreateSnapPostRequestScheme)
   await snapPostService.save(params, userId)
 })

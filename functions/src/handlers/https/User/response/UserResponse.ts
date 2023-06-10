@@ -5,8 +5,8 @@ export const UserResponseScheme = z.object({
   userId: z.string(),
   name: z.string(),
   iconPath: z.string(),
-  resistedAt: z.date(),
-  updatedAt: z.date(),
+  resistedAt: z.string(),
+  updatedAt: z.string(),
 })
 
 export type UserResponse = z.infer<typeof UserResponseScheme>
@@ -16,8 +16,8 @@ export const toUserResponse = (user: User): UserResponse => {
     userId: user.userId,
     name: user.name,
     iconPath: user.iconPath,
-    resistedAt: user.resistedAt,
-    updatedAt: user.updatedAt,
+    resistedAt: user.resistedAt.toISOString(),
+    updatedAt: user.updatedAt.toISOString(),
   }
   return response
 }

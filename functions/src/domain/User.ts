@@ -1,4 +1,4 @@
-import { PostUser } from "./PostUser"
+import { PostedUser } from "./PostedUser"
 
 export class User {
   constructor(
@@ -9,8 +9,8 @@ export class User {
     readonly updatedAt: Date
   ) {}
 
-  public toPostUser(): PostUser {
-    return new PostUser(this.userId, this.name, this.iconPath)
+  public toPostUser(): PostedUser {
+    return new PostedUser(this.userId, this.name, this.iconPath)
   }
 
   public edit(name: string, iconPath: string): User {

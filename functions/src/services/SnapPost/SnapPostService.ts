@@ -1,4 +1,4 @@
-import { PostUser } from "../../domain/PostUser"
+import { PostedUser } from "../../domain/PostedUser"
 import { PostImages } from "../../domain/SnapPost/PostImages"
 import { SnapPost } from "../../domain/SnapPost/SnapPost"
 import { LikedCount } from "../../domain/SnapPost/likedCount"
@@ -48,7 +48,7 @@ export class SnapPostService {
         return new PostImages(postImage.imagePath, postImage.tags)
       })
     )
-    await snapPostRepository.update(editedSnapPost)
+    await snapPostRepository.save(editedSnapPost)
   }
 
   public async like(userId: string, snapPostIds: string[]): Promise<void> {
@@ -73,7 +73,7 @@ export class SnapPostService {
     await snapPostRepository.delete(snapPostId)
   }
 
-  private createSnapPost = (params: SnapPostParams, postUser: PostUser): SnapPost => {
+  private createSnapPost = (params: SnapPostParams, postedUser: PostedUser): SnapPost => {
     return new SnapPost(
       generateId(),
       params.title,
@@ -86,7 +86,7 @@ export class SnapPostService {
         return new PostImages(postImage.imagePath, postImage.tags)
       }),
       new LikedCount(0),
-      postUser
+      postedUser
     )
   }
 }
