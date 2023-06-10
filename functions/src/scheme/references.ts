@@ -1,5 +1,6 @@
 import { db } from "../firebase/config"
 
+// NOTE: firestoreのドキュメント構造
 export const references = {
   users: {
     ref: db.collection("users"),
@@ -43,6 +44,15 @@ export const references = {
     _snapPostsId: (snapPostId: string) => {
       return {
         ref: db.collection("snapPosts").doc(snapPostId),
+
+        snapPostChangeLogs: {
+          ref: db.collection("snapPosts").doc(snapPostId).collection("snapPostChangeLogs"),
+          _snapPostChangeLogsId: (SnapPostChangeLogId: string) => {
+            return {
+              ref: db.collection("snapPosts").doc(snapPostId).collection("snapPostChangeLogs").doc(SnapPostChangeLogId),
+            }
+          },
+        },
       }
     },
   },
@@ -54,5 +64,11 @@ export const references = {
         ref: db.collection("snapRoutes").doc(snapRouteId),
       }
     },
+  },
+}
+
+export const groupReferences = {
+  likedSnapPosts: {
+    ref: db.collectionGroup("likedSnapPosts"),
   },
 }

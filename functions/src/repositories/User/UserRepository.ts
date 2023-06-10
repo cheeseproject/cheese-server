@@ -1,6 +1,5 @@
 import { User } from "../../domain/User"
-import { ProfileChangeLogDocument } from "../../scheme"
-import { references } from "../../scheme/references"
+import { ProfileChangeLogDocument, references } from "../../scheme"
 import { userConverter } from "./UserConverter"
 
 export class UserRepository {

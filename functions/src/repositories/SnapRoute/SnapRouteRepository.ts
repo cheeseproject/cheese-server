@@ -1,10 +1,9 @@
 import { FieldPath } from "firebase-admin/firestore"
 import { SnapPost } from "../../domain/SnapPost/SnapPost"
 import { SnapRoute } from "../../domain/SnapRoute/SnapRoute"
-import { SnapRouteDocument } from "../../scheme"
+import { SnapRouteDocument, references } from "../../scheme"
 import { SnapPostConverter } from "../SnapPost/SnapPostConverter"
 import { snapRouteConverter } from "./SnapRouteConverter"
-import { references } from "../../scheme/references"
 
 class SnapRouteRepository {
   public async save(snapRoute: SnapRoute): Promise<void> {

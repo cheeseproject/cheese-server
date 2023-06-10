@@ -1,8 +1,8 @@
 import { FieldPath } from "firebase-admin/firestore"
 import { SnapPost } from "../../domain/SnapPost/SnapPost"
 import { LikedSnapPostConverter } from "../User/LikedSnapPostConverter"
-import { SnapPostConverter } from "./SnapPostConverter"
-import { references } from "../../scheme/references"
+import { SnapPostChangeLogConverter, SnapPostConverter } from "./SnapPostConverter"
+import { groupReferences, references } from "../../scheme/"
 
 export class SnapPostRepository {
   public async save(snapPost: SnapPost): Promise<void> {
@@ -20,6 +20,11 @@ export class SnapPostRepository {
   public async saveLiked(userId: string, snapPost: SnapPost): Promise<void> {
     await this.connectLikedToUser(userId, snapPost)
     await this.save(snapPost)
+  }
+
+  public async update(snapPost: SnapPost): Promise<void> {
+    await this.save(snapPost)
+    await this.saveSnapPostChangeLog(snapPost)
   }
 
   public async findById(snapPostId: string): Promise<SnapPost | undefined> {
@@ -63,6 +68,11 @@ export class SnapPostRepository {
 
   public async delete(snapPostId: string): Promise<void> {
     await references.snapPosts.ref.doc(snapPostId).withConverter(SnapPostConverter).delete()
+  }
+
+  private async saveSnapPostChangeLog(snapPost: SnapPost): Promise<void> {
+    const document = SnapPostChangeLogConverter.toFirestore(snapPost)
+    await references.snapPosts._snapPostsId(snapPost.snapPostId).snapPostChangeLogs.ref.add(document)
   }
 }
 

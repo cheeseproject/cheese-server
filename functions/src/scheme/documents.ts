@@ -47,8 +47,10 @@ export type SnapRouteDocument = {
 // id: snapPostId
 export type likedSnapPostDocument = {
   likedAt: Timestamp
-  // snapPostDocument
+
   snapPost: {
+    snapPostId: string
+    // snapPostDocument
     title: string
     comment: string | null
     postedAt: Timestamp
@@ -76,7 +78,16 @@ export type ProfileChangeLogDocument = {
   iconPath: string
 }
 
-export type UpdateSnapPostLogDocument = {
-  userId: string
-  snapPostId: string
+// sub collection of SnapPosts
+// id: randomId
+export type SnapPostChangeLogDocument = {
+  title: string
+  comment: string | null
+  updatedAt: Timestamp
+  longitude: number
+  latitude: number
+  postImages: {
+    imagePath: string
+    tags: string[]
+  }[]
 }

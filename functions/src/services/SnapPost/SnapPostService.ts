@@ -48,7 +48,7 @@ export class SnapPostService {
         return new PostImages(postImage.imagePath, postImage.tags)
       })
     )
-    await snapPostRepository.save(editedSnapPost)
+    await snapPostRepository.update(editedSnapPost)
   }
 
   public async like(userId: string, snapPostIds: string[]): Promise<void> {

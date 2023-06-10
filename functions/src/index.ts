@@ -5,3 +5,4 @@ export * from "./handlers/https/SnapPost"
 export * from "./handlers/https/SnapRoute"
 
 export * from "./handlers/event/User"
+export * from "./handlers/event/SnapPost"
