@@ -48,15 +48,15 @@ export class SnapPostService {
         return new PostImages(postImage.imagePath, postImage.tags)
       })
     )
-    await snapPostRepository.save(editedSnapPost)
+    await snapPostRepository.update(editedSnapPost)
   }
 
   public async like(userId: string, snapPostIds: string[]): Promise<void> {
-    const snapPosts = await Promise.all(snapPostIds.map((snapPostId) => snapPostRepository.findById(snapPostId)))
+    const snapPosts = await snapPostRepository.findByIds(snapPostIds)
+    if (snapPosts.length !== snapPostIds.length) {
+      Exception.notFound("snap post")
+    }
     const likedSnapPosts = snapPosts.map((snapPost) => {
-      if (!snapPost) {
-        Exception.notFound("snap post")
-      }
       return snapPost.liked()
     })
     await Promise.all(likedSnapPosts.map((likedSnapPost) => snapPostRepository.saveLiked(userId, likedSnapPost)))

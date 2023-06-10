@@ -1,23 +1,22 @@
 import { FieldPath } from "firebase-admin/firestore"
 import { SnapPost } from "../../domain/SnapPost/SnapPost"
 import { SnapRoute } from "../../domain/SnapRoute/SnapRoute"
-import { db } from "../../firebase/config"
-import { SnapRouteDocument } from "../../scheme"
+import { SnapRouteDocument, references } from "../../scheme"
 import { SnapPostConverter } from "../SnapPost/SnapPostConverter"
 import { snapRouteConverter } from "./SnapRouteConverter"
 
 class SnapRouteRepository {
-  private collectionRef = (userId: string) => db.collection("users").doc(userId).collection("snapRoutes")
-  private snapPostCollectionRef = db.collection("snapPosts")
-
   public async save(snapRoute: SnapRoute): Promise<void> {
-    await this.collectionRef(snapRoute.createdUserId)
-      .doc(snapRoute.snapRouteId)
-      .set(snapRouteConverter.toFirestore(snapRoute))
+    await references.users
+      ._userId(snapRoute.createdUserId)
+      .snapRoutes._snapRoutesId(snapRoute.snapRouteId)
+      .ref.set(snapRouteConverter.toFirestore(snapRoute))
   }
 
   public async findByUserId(userId: string): Promise<SnapRoute[]> {
-    const snapshot = (await this.collectionRef(userId).get()) as FirebaseFirestore.QuerySnapshot<SnapRouteDocument>
+    const snapshot = (await references.users
+      ._userId(userId)
+      .snapRoutes.ref.get()) as FirebaseFirestore.QuerySnapshot<SnapRouteDocument>
     const snapRoutes: SnapRoute[] = []
 
     for (const doc of snapshot.docs) {
@@ -28,7 +27,7 @@ class SnapRouteRepository {
   }
 
   public async findByIdAndUserId(userId: string, snapRouteId: string): Promise<SnapRoute | undefined> {
-    const snapshot = await this.collectionRef(userId).doc(snapRouteId).get()
+    const snapshot = await references.users._userId(userId).snapRoutes._snapRoutesId(snapRouteId).ref.get()
 
     // NOTE: JOINがしたいので、Converterが使えない
     const date = snapshot.data() as SnapRouteDocument
@@ -44,11 +43,11 @@ class SnapRouteRepository {
   }
 
   public async delete(userId: string, snapRouteId: string): Promise<void> {
-    await this.collectionRef(userId).doc(snapRouteId).delete()
+    await references.users._userId(userId).snapRoutes._snapRoutesId(snapRouteId).ref.delete()
   }
 
   private async findSnapPostByIds(snapPostIds: string[]): Promise<SnapPost[]> {
-    const snapshot = await this.snapPostCollectionRef
+    const snapshot = await references.snapPosts.ref
       .where(FieldPath.documentId(), "in", snapPostIds)
       .withConverter(SnapPostConverter)
       .get()

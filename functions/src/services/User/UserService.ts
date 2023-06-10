@@ -27,7 +27,7 @@ class UserService {
       Exception.notFound(`user: ${userId}`)
     }
     const updatedUser = user.edit(params.name, params.iconPath)
-    await userRepository.save(updatedUser)
+    await userRepository.update(updatedUser)
   }
 }
 

@@ -12,6 +12,7 @@ export const LikedSnapPostConverter = {
     const documentData: likedSnapPostDocument = {
       likedAt: dateToTimestamp(new Date()),
       snapPost: {
+        snapPostId: post.snapPostId,
         title: post.title,
         comment: post.comment ?? null,
         postedAt: dateToTimestamp(post.postedAt),

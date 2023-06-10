@@ -1,7 +1,7 @@
 import { DocumentData } from "firebase-admin/firestore"
 import { PostImages } from "../../domain/SnapPost/PostImages"
 import { SnapPost } from "../../domain/SnapPost/SnapPost"
-import { SnapPostDocument } from "../../scheme"
+import { SnapPostChangeLogDocument, SnapPostDocument } from "../../scheme"
 import { dateToTimestamp } from "../../libs/dateToTimestamp"
 import { Snapshot } from "../_types"
 import { LikedCount } from "../../domain/SnapPost/likedCount"
@@ -47,5 +47,24 @@ export const SnapPostConverter = {
       new LikedCount(data.likedCount),
       new PostedUser(data.postedUser.userId, data.postedUser.name, data.postedUser.iconPath)
     )
+  },
+}
+
+export const SnapPostChangeLogConverter = {
+  toFirestore: (post: SnapPost): DocumentData => {
+    const document: SnapPostChangeLogDocument = {
+      title: post.title,
+      comment: post.comment ?? null,
+      updatedAt: dateToTimestamp(post.updatedAt),
+      longitude: post.longitude,
+      latitude: post.latitude,
+      postImages: post.postImages.map((image) => {
+        return {
+          imagePath: image.imagePath,
+          tags: image.tags,
+        }
+      }),
+    }
+    return document
   },
 }
