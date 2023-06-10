@@ -1,16 +1,29 @@
 import { User } from "../../domain/User"
-import { db } from "../../firebase/config"
+import { ProfileChangeLogDocument } from "../../scheme"
+import { references } from "../../scheme/references"
 import { userConverter } from "./UserConverter"
 
 export class UserRepository {
-  private readonly collectionRef = db.collection("users")
   public async save(user: User): Promise<void> {
-    await this.collectionRef.doc(user.userId).withConverter(userConverter).set(user)
+    await references.users._userId(user.userId).ref.withConverter(userConverter).set(user)
   }
 
   public async findById(userId: string): Promise<User | undefined> {
-    const snapshot = await this.collectionRef.doc(userId).withConverter(userConverter).get()
+    const snapshot = await references.users._userId(userId).ref.withConverter(userConverter).get()
     return snapshot.data()
+  }
+
+  public async update(user: User): Promise<void> {
+    await this.save(user)
+    await this.saveUserUpdateLog(user)
+  }
+
+  private async saveUserUpdateLog(user: User): Promise<void> {
+    const documentData: ProfileChangeLogDocument = {
+      name: user.name,
+      iconPath: user.iconPath,
+    }
+    await references.users._userId(user.userId).profileChangeLogs.ref.add(documentData)
   }
 }
 

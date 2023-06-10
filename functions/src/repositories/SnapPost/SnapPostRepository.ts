@@ -1,21 +1,20 @@
 import { FieldPath } from "firebase-admin/firestore"
 import { SnapPost } from "../../domain/SnapPost/SnapPost"
-import { db } from "../../firebase/config"
 import { LikedSnapPostConverter } from "../User/LikedSnapPostConverter"
 import { SnapPostConverter } from "./SnapPostConverter"
+import { references } from "../../scheme/references"
 
 export class SnapPostRepository {
-  private readonly collectionRef = db.collection("snapPosts")
-  private userLikedRef(userId: string) {
-    return db.collection("users").doc(userId).collection("likedSnapPosts")
-  }
-
   public async save(snapPost: SnapPost): Promise<void> {
-    await this.collectionRef.doc(snapPost.snapPostId).withConverter(SnapPostConverter).set(snapPost)
+    await references.snapPosts._snapPostsId(snapPost.snapPostId).ref.withConverter(SnapPostConverter).set(snapPost)
   }
 
   private async connectLikedToUser(userId: string, snapPost: SnapPost): Promise<void> {
-    await this.userLikedRef(userId).doc(snapPost.snapPostId).withConverter(LikedSnapPostConverter).set(snapPost)
+    await references.users
+      ._userId(userId)
+      .likedSnapPosts._likedSnapPostsId(snapPost.snapPostId)
+      .ref.withConverter(LikedSnapPostConverter)
+      .set(snapPost)
   }
 
   public async saveLiked(userId: string, snapPost: SnapPost): Promise<void> {
@@ -24,12 +23,12 @@ export class SnapPostRepository {
   }
 
   public async findById(snapPostId: string): Promise<SnapPost | undefined> {
-    const snapshot = await this.collectionRef.doc(snapPostId).withConverter(SnapPostConverter).get()
+    const snapshot = await references.snapPosts._snapPostsId(snapPostId).ref.withConverter(SnapPostConverter).get()
     return snapshot.data()
   }
 
   public async findByIdAndUserId(userId: string, snapPostId: string): Promise<SnapPost | undefined> {
-    const snapshot = await this.collectionRef
+    const snapshot = await references.snapPosts.ref
       .where(FieldPath.documentId(), "==", snapPostId)
       .where("postedUser.userId", "==", userId)
       .withConverter(SnapPostConverter)
@@ -38,15 +37,16 @@ export class SnapPostRepository {
   }
 
   public async findLikeIdByUserId(userId: string): Promise<SnapPost[]> {
-    const snapshot = await this.userLikedRef(userId)
-      .withConverter(LikedSnapPostConverter)
+    const snapshot = await references.users
+      ._userId(userId)
+      .likedSnapPosts.ref.withConverter(LikedSnapPostConverter)
       .orderBy("likedAt", "desc")
       .get()
     return snapshot.docs.map((doc) => doc.data())
   }
 
   public async findByUserId(userId: string): Promise<SnapPost[]> {
-    const snapshot = await this.collectionRef
+    const snapshot = await references.snapPosts.ref
       .where("postedUser.userId", "==", userId)
       .withConverter(SnapPostConverter)
       .get()
@@ -54,7 +54,7 @@ export class SnapPostRepository {
   }
 
   public async findByIds(snapPostIds: string[]): Promise<SnapPost[]> {
-    const snapshot = await this.collectionRef
+    const snapshot = await references.snapPosts.ref
       .where(FieldPath.documentId(), "in", snapPostIds)
       .withConverter(SnapPostConverter)
       .get()
@@ -62,7 +62,7 @@ export class SnapPostRepository {
   }
 
   public async delete(snapPostId: string): Promise<void> {
-    await this.collectionRef.doc(snapPostId).withConverter(SnapPostConverter).delete()
+    await references.snapPosts.ref.doc(snapPostId).withConverter(SnapPostConverter).delete()
   }
 }
 
