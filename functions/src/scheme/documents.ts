@@ -29,6 +29,7 @@ export type SnapPostDocument = {
     name: string
     iconPath: string
   }
+  randomIndex: number | null
 }
 
 // sub collection of users
@@ -90,4 +91,10 @@ export type SnapPostChangeLogDocument = {
     imagePath: string
     tags: string[]
   }[]
+}
+
+// sub collection of SnapPosts
+// id: randomId
+export type SnapPostCreateLogDocument = {
+  latestRandomIndex: number
 }

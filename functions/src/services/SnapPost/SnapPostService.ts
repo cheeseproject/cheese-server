@@ -36,6 +36,11 @@ export class SnapPostService {
     return snapPosts
   }
 
+  public async findByRandomIndexesAndNotUserId(randomIndexes: number[], userId: string): Promise<SnapPost[]> {
+    const snapPosts = await snapPostRepository.findByRandomIndexesAndNotUserId(randomIndexes, userId)
+    return snapPosts
+  }
+
   public async update(params: SnapPostParams, userId: string, snapPostId: string): Promise<void> {
     const snapPost = await snapPostRepository.findByIdAndUserId(userId, snapPostId)
     if (!snapPost) {
@@ -53,24 +58,26 @@ export class SnapPostService {
 
   public async like(userId: string, snapPostIds: string[]): Promise<void> {
     const snapPosts = await snapPostRepository.findByIds(snapPostIds)
-    if (snapPosts.length !== snapPostIds.length) {
-      Exception.notFound("snap post")
-    }
-    const likedSnapPosts = snapPosts.map((snapPost) => {
-      return snapPost.liked()
+
+    snapPosts.forEach(async (snapPost) => {
+      if (!snapPostIds.includes(snapPost.snapPostId)) return
+
+      const likedSnapPost = snapPost.liked()
+      await snapPostRepository.saveLiked(userId, likedSnapPost)
     })
-    await Promise.all(likedSnapPosts.map((likedSnapPost) => snapPostRepository.saveLiked(userId, likedSnapPost)))
   }
 
   public async delete(userId: string, snapPostId: string): Promise<void> {
-    const snapPost = await snapPostRepository.findById(snapPostId)
+    const snapPost = await snapPostRepository.findByIdAndUserId(userId, snapPostId)
     if (!snapPost) {
       Exception.notFound("snap post")
     }
-    if (snapPost.postedUser.userId !== userId) {
-      Exception.permissionDenied()
-    }
     await snapPostRepository.delete(snapPostId)
+  }
+
+  public async count(): Promise<number> {
+    const count = await snapPostRepository.count()
+    return count
   }
 
   private createSnapPost = (params: SnapPostParams, postedUser: PostedUser): SnapPost => {

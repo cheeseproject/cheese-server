@@ -28,6 +28,7 @@ export const SnapPostConverter = {
         name: post.postedUser.name,
         iconPath: post.postedUser.iconPath,
       },
+      randomIndex: null,
     }
     return documentData
   },

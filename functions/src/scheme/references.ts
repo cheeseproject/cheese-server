@@ -53,6 +53,15 @@ export const references = {
             }
           },
         },
+
+        snapPostCreateLogs: {
+          ref: db.collection("snapPosts").doc(snapPostId).collection("snapPostCreateLogs"),
+          _snapPostCreateLogsId: (snapPostCreateLogId: string) => {
+            return {
+              ref: db.collection("snapPosts").doc(snapPostId).collection("snapPostCreateLogs").doc(snapPostCreateLogId),
+            }
+          },
+        },
       }
     },
   },
