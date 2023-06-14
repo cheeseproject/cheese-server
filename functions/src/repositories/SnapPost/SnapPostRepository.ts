@@ -1,6 +1,5 @@
 import { FieldPath } from "firebase-admin/firestore"
 import { SnapPost } from "../../domain/SnapPost/SnapPost"
-import { LikedSnapPostConverter } from "../User/LikedSnapPostConverter"
 import { SnapPostChangeLogConverter, SnapPostConverter } from "./SnapPostConverter"
 import { SnapPostCreateLogDocument, SnapPostDocument, references } from "../../scheme/"
 
@@ -9,19 +8,6 @@ export class SnapPostRepository {
     await references.snapPosts._snapPostsId(snapPost.snapPostId).ref.withConverter(SnapPostConverter).set(snapPost)
     const latestRandomId = await this.findLatestRandomId()
     await this.saveSnapPostCreateLog(snapPost.snapPostId, latestRandomId)
-  }
-
-  private async connectLikedToUser(userId: string, snapPost: SnapPost): Promise<void> {
-    await references.users
-      ._userId(userId)
-      .likedSnapPosts._likedSnapPostsId(snapPost.snapPostId)
-      .ref.withConverter(LikedSnapPostConverter)
-      .set(snapPost)
-  }
-
-  public async saveLiked(userId: string, snapPost: SnapPost): Promise<void> {
-    await this.connectLikedToUser(userId, snapPost)
-    await this.save(snapPost)
   }
 
   public async update(snapPost: SnapPost): Promise<void> {
@@ -41,15 +27,6 @@ export class SnapPostRepository {
       .withConverter(SnapPostConverter)
       .get()
     return snapshot.docs.length > 0 ? snapshot.docs[0].data() : undefined
-  }
-
-  public async findLikeIdByUserId(userId: string): Promise<SnapPost[]> {
-    const snapshot = await references.users
-      ._userId(userId)
-      .likedSnapPosts.ref.withConverter(LikedSnapPostConverter)
-      .orderBy("likedAt", "desc")
-      .get()
-    return snapshot.docs.map((doc) => doc.data())
   }
 
   public async findByUserId(userId: string): Promise<SnapPost[]> {

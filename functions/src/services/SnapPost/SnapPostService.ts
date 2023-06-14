@@ -4,6 +4,7 @@ import { SnapPost } from "../../domain/SnapPost/SnapPost"
 import { LikedCount } from "../../domain/SnapPost/likedCount"
 import { Exception } from "../../libs/Exception"
 import { generateId } from "../../libs/generateId"
+import { likedSnapPostRepository } from "../../repositories/LikedSnapPost/LikedSnapPostRepository"
 import { snapPostRepository } from "../../repositories/SnapPost/SnapPostRepository"
 import { userRepository } from "../../repositories/User/UserRepository"
 import { SnapPostParams } from "./SnapPostParams"
@@ -32,7 +33,7 @@ export class SnapPostService {
   }
 
   public async findLikeIdByUserId(userId: string): Promise<SnapPost[]> {
-    const snapPosts = await snapPostRepository.findLikeIdByUserId(userId)
+    const snapPosts = await likedSnapPostRepository.findByUserId(userId)
     return snapPosts
   }
 
@@ -61,9 +62,8 @@ export class SnapPostService {
 
     snapPosts.forEach(async (snapPost) => {
       if (!snapPostIds.includes(snapPost.snapPostId)) return
-
       const likedSnapPost = snapPost.liked()
-      await snapPostRepository.saveLiked(userId, likedSnapPost)
+      await likedSnapPostRepository.save(userId, likedSnapPost)
     })
   }
 
