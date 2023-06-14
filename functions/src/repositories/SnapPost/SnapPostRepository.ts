@@ -2,11 +2,13 @@ import { FieldPath } from "firebase-admin/firestore"
 import { SnapPost } from "../../domain/SnapPost/SnapPost"
 import { LikedSnapPostConverter } from "../User/LikedSnapPostConverter"
 import { SnapPostChangeLogConverter, SnapPostConverter } from "./SnapPostConverter"
-import { groupReferences, references } from "../../scheme/"
+import { SnapPostCreateLogDocument, SnapPostDocument, references } from "../../scheme/"
 
 export class SnapPostRepository {
   public async save(snapPost: SnapPost): Promise<void> {
     await references.snapPosts._snapPostsId(snapPost.snapPostId).ref.withConverter(SnapPostConverter).set(snapPost)
+    const latestRandomId = await this.findLatestRandomId()
+    await this.saveSnapPostCreateLog(snapPost.snapPostId, latestRandomId)
   }
 
   private async connectLikedToUser(userId: string, snapPost: SnapPost): Promise<void> {
@@ -23,7 +25,7 @@ export class SnapPostRepository {
   }
 
   public async update(snapPost: SnapPost): Promise<void> {
-    await this.save(snapPost)
+    await references.snapPosts._snapPostsId(snapPost.snapPostId).ref.withConverter(SnapPostConverter).set(snapPost)
     await this.saveSnapPostChangeLog(snapPost)
   }
 
@@ -66,13 +68,42 @@ export class SnapPostRepository {
     return snapshot.docs.map((doc) => doc.data())
   }
 
+  public async findByRandomIndexesAndNotUserId(randomIndexes: number[], userId: string): Promise<SnapPost[]> {
+    const snapshot = await references.snapPosts.ref
+      .where("randomIndex", "in", randomIndexes)
+      .where("postedUser.userId", "!=", userId)
+      .withConverter(SnapPostConverter)
+      .get()
+    return snapshot.docs.map((doc) => doc.data())
+  }
+
   public async delete(snapPostId: string): Promise<void> {
     await references.snapPosts.ref.doc(snapPostId).withConverter(SnapPostConverter).delete()
+  }
+
+  public async count(): Promise<number> {
+    const snapshot = await references.snapPosts.ref.count().get()
+    return snapshot.data().count
+  }
+
+  private async findLatestRandomId(): Promise<number> {
+    const snapshot = (await references.snapPosts.ref
+      .orderBy("postedUser.postedAt", "desc")
+      .limit(1)
+      .get()) as FirebaseFirestore.QuerySnapshot<SnapPostDocument>
+
+    // NOTE: 一番最初の投稿の場合は、randomIdがnullになるので、0を返す
+    return snapshot.docs[0]?.data().randomIndex ?? 0
   }
 
   private async saveSnapPostChangeLog(snapPost: SnapPost): Promise<void> {
     const document = SnapPostChangeLogConverter.toFirestore(snapPost)
     await references.snapPosts._snapPostsId(snapPost.snapPostId).snapPostChangeLogs.ref.add(document)
+  }
+
+  private async saveSnapPostCreateLog(snapPostId: string, latestRandomIndex: number): Promise<void> {
+    const document: SnapPostCreateLogDocument = { latestRandomIndex }
+    await references.snapPosts._snapPostsId(snapPostId).snapPostCreateLogs.ref.add(document)
   }
 }
 

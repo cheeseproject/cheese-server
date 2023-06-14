@@ -6,9 +6,9 @@ import { SnapPostChangeLogDocument, groupReferences, references } from "../../..
 export const createSnapPostChangeLog = functions
   .region(REGION)
   .firestore.document("snapPosts/{snapPostId}/snapPostChangeLogs/{snapPostChangeLogId}")
-  .onCreate(async (change, context) => {
+  .onCreate(async (snapshot, context) => {
     const snapPostId = context.params.snapPostId
-    const params = change.data() as SnapPostChangeLogDocument
+    const params = snapshot.data() as SnapPostChangeLogDocument
 
     const likedUserIds = await findLikedUserIdsBySnapPostId(snapPostId)
 
