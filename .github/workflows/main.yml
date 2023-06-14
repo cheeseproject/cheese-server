@@ -7,6 +7,7 @@ on:
 jobs:
   test:
     name: Check the source code
+
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -16,4 +17,11 @@ jobs:
           npm install
 
       - name: Lint
-        run: npm run lint
+        run: |
+          cd functions
+          npm run lint
+
+      - name: Jest
+        run: |
+          cd functions
+          npm run test

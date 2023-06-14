@@ -2,6 +2,7 @@ import { REGION, functions } from "../../../firebase/config"
 import { ProfileChangeLogDocument, references } from "../../../scheme"
 import { snapPostRepository } from "../../../repositories/SnapPost/SnapPostRepository"
 import { logger } from "firebase-functions/v1"
+import { likedSnapPostRepository } from "../../../repositories/LikedSnapPost/LikedSnapPostRepository"
 
 export const createProfileChangeLog = functions
   .region(REGION)
@@ -21,7 +22,7 @@ export const createProfileChangeLog = functions
       }
     })
 
-    const likedSnapPosts = await snapPostRepository.findLikeIdByUserId(userId)
+    const likedSnapPosts = await likedSnapPostRepository.findByUserId(userId)
     const likedSnapPostIds = likedSnapPosts.map((snapPost) => snapPost.snapPostId)
 
     likedSnapPostIds.forEach((snapPostId) => {
