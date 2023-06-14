@@ -1,0 +1,19 @@
+name: Check the source code
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+jobs:
+  test:
+    name: Check the source code
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install packages
+        run: |
+          cd functions
+          npm install
+
+      - name: Lint
+        run: npm run lint
