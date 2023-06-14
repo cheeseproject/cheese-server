@@ -2,7 +2,7 @@ import { logger } from "firebase-functions/v1"
 import { REGION, functions } from "../../../firebase/config"
 import { SnapPostCreateLogDocument, references } from "../../../scheme"
 
-export const createSnapPostCreateLog = functions
+export const createSnapPostCreateLogEvent = functions
   .region(REGION)
   .firestore.document("snapPosts/{snapPostId}/snapPostCreateLogs/{snapPostCreateLogId}")
   .onCreate(async (snapshot, context) => {

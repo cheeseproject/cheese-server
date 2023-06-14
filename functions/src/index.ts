@@ -6,3 +6,4 @@ export * from "./handlers/https/SnapRoute"
 
 export * from "./handlers/event/User"
 export * from "./handlers/event/SnapPost"
+export * from "./handlers/event/LikedSnapPost"

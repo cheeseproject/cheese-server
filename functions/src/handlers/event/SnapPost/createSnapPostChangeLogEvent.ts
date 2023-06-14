@@ -1,16 +1,16 @@
 import { logger } from "firebase-functions/v1"
 import { REGION, functions } from "../../../firebase/config"
-import { LikedSnapPostConverter } from "../../../repositories/User/LikedSnapPostConverter"
-import { SnapPostChangeLogDocument, groupReferences, references } from "../../../scheme"
+import { SnapPostChangeLogDocument, references } from "../../../scheme"
+import { likedSnapPostRepository } from "../../../repositories/LikedSnapPost/LikedSnapPostRepository"
 
-export const createSnapPostChangeLog = functions
+export const createSnapPostChangeLogEvent = functions
   .region(REGION)
   .firestore.document("snapPosts/{snapPostId}/snapPostChangeLogs/{snapPostChangeLogId}")
   .onCreate(async (snapshot, context) => {
     const snapPostId = context.params.snapPostId
     const params = snapshot.data() as SnapPostChangeLogDocument
 
-    const likedUserIds = await findLikedUserIdsBySnapPostId(snapPostId)
+    const likedUserIds = await likedSnapPostRepository.findUserIdsById(snapPostId)
 
     likedUserIds.forEach((userId) => {
       try {
@@ -20,14 +20,6 @@ export const createSnapPostChangeLog = functions
       }
     })
   })
-
-const findLikedUserIdsBySnapPostId = async (snapPostId: string): Promise<string[]> => {
-  const snapshot = await groupReferences.likedSnapPosts.ref
-    .withConverter(LikedSnapPostConverter)
-    .where("snapPost.snapPostId", "==", snapPostId)
-    .get()
-  return snapshot.docs.map((doc) => doc.ref.parent?.parent?.id).filter((id) => Boolean(id)) as string[]
-}
 
 const updateLikedSnapPostDocument = async (
   userId: string,
