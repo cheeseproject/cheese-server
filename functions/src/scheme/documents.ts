@@ -5,6 +5,7 @@ import { Timestamp } from "firebase-admin/firestore"
 export type UserDocument = {
   name: string
   iconPath: string
+  searchedRadiusInM: number
   resistedAt: Timestamp
   updatedAt: Timestamp
 }

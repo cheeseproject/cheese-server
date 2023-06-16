@@ -9,8 +9,9 @@ test("userConverter: toDocument", () => {
   const name = "yamada taro"
   const iconPath = "https://hogehoge"
   const date = new Date()
+  const radiusInM = 1000
 
-  const user = new User(userId, name, iconPath, date, date)
+  const user = new User(userId, name, iconPath, date, date, radiusInM)
   const userDocument = userConverter.toFirestore(user)
 
   const timestamp = dateToTimestamp(date)
@@ -19,6 +20,7 @@ test("userConverter: toDocument", () => {
     iconPath,
     resistedAt: timestamp,
     updatedAt: timestamp,
+    searchedRadiusInM: radiusInM,
   }
   expect(userDocument).toEqual(firestoreDocument)
 })

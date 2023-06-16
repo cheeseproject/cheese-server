@@ -6,7 +6,8 @@ export class User {
     readonly name: string,
     readonly iconPath: string,
     readonly resistedAt: Date,
-    readonly updatedAt: Date
+    readonly updatedAt: Date,
+    readonly searchedRadiusInM: number
   ) {}
 
   public toPostUser(): PostedUser {
@@ -14,6 +15,6 @@ export class User {
   }
 
   public edit(name: string, iconPath: string): User {
-    return new User(this.userId, name, iconPath, this.resistedAt, new Date())
+    return new User(this.userId, name, iconPath, this.resistedAt, new Date(), this.searchedRadiusInM)
   }
 }
