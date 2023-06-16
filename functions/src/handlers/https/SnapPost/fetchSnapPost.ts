@@ -65,3 +65,17 @@ export const fetchSnapPostsCount = baseFunction<SnapPostCountResponse>(async (_,
   const snapPostsCount = await snapPostService.count()
   return toSnapPostCountResponse(snapPostsCount)
 })
+
+/**
+ * 緯度経度で範囲を指定して投稿を取得する
+ */
+const FetchSnapPostsByGeographyRangeRequestScheme = z.object({
+  latitude: z.number(),
+  longitude: z.number(),
+})
+export const fetchSnapPostsByGeographyRange = baseFunction<SnapPostResponseList>(async (data, context) => {
+  const { userId } = Validator.auth(context)
+  const params = Validator.scheme(data, FetchSnapPostsByGeographyRangeRequestScheme)
+  const snapPosts = await snapPostService.findByGeographyRange(userId, params.latitude, params.longitude)
+  return toSnapPostResponseList(snapPosts)
+})

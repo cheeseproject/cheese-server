@@ -2,6 +2,7 @@ import { FieldPath } from "firebase-admin/firestore"
 import { SnapPost } from "../../domain/SnapPost/SnapPost"
 import { SnapPostChangeLogConverter, SnapPostConverter } from "./SnapPostConverter"
 import { SnapPostCreateLogDocument, SnapPostDocument, references } from "../../scheme/"
+import { GeohashRange } from "geofire-common"
 
 export class SnapPostRepository {
   public async save(snapPost: SnapPost): Promise<void> {
@@ -52,6 +53,23 @@ export class SnapPostRepository {
       .withConverter(SnapPostConverter)
       .get()
     return snapshot.docs.map((doc) => doc.data())
+  }
+
+  public async findByNotUserIdAndGeohashRanges(userId: string, geohashRanges: GeohashRange[]): Promise<SnapPost[]> {
+    // NOTE: 参照先
+    // NOTE: https://firebase.google.com/docs/firestore/solutions/geoqueries?hl=ja#solution_geohashes
+    const snapPosts: SnapPost[] = []
+    geohashRanges.forEach(async (range) => {
+      const snapshot = await references.snapPosts.ref
+        .where("postedUser.userId", "!=", userId)
+        .orderBy("coordinate.geohash")
+        .startAt(range[0])
+        .endAt(range[1])
+        .withConverter(SnapPostConverter)
+        .get()
+      snapPosts.push(...snapshot.docs.map((doc) => doc.data()))
+    })
+    return snapPosts
   }
 
   public async delete(snapPostId: string): Promise<void> {

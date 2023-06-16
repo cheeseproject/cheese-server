@@ -30,8 +30,8 @@ const updateLikedSnapPostDocument = async (
     "snapPost.postedUser.title": params.title,
     "snapPost.postedUser.comment": params.comment,
     "snapPost.postedUser.updatedAt": params.updatedAt,
-    "snapPost.postedUser.longitude": params.longitude,
-    "snapPost.postedUser.latitude": params.latitude,
     "snapPost.postedUser.postImages": params.postImages,
+    "snapPost.postedUser.coordinate.geohash": params.coordinate.geohash,
+    "snapPost.postedUser.coordinate.geopoint": params.coordinate.geopoint,
   })
 }

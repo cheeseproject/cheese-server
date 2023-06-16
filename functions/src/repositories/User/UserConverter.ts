@@ -11,11 +11,19 @@ export const userConverter = {
       iconPath: user.iconPath,
       resistedAt: dateToTimestamp(user.resistedAt),
       updatedAt: dateToTimestamp(user.updatedAt),
+      searchedRadiusInM: user.searchedRadiusInM,
     }
     return documentData
   },
   fromFirestore(snapshot: Snapshot) {
     const data = snapshot.data() as UserDocument
-    return new User(snapshot.id, data.name, data.iconPath, data.resistedAt.toDate(), data.updatedAt.toDate())
+    return new User(
+      snapshot.id,
+      data.name,
+      data.iconPath,
+      data.resistedAt.toDate(),
+      data.updatedAt.toDate(),
+      data.searchedRadiusInM
+    )
   },
 }

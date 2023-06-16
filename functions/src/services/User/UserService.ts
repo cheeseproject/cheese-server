@@ -9,7 +9,9 @@ class UserService {
     if (user) {
       Exception.alreadyExists(`user: ${userId}`)
     }
-    const newUser = new User(userId, params.name, params.iconPath, new Date(), new Date())
+    // NOTE: 初期値は5000m
+    const defaultSearchRadiusInM = 5000
+    const newUser = new User(userId, params.name, params.iconPath, new Date(), new Date(), defaultSearchRadiusInM)
     await userRepository.save(newUser)
   }
 
