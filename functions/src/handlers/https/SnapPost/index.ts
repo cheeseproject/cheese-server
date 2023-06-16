@@ -1,5 +1,5 @@
 export { createSnapPost } from "./createSnapPost"
-export { fetchMySnapPosts, fetchLikedSnapPosts, fetchSnapPost } from "./fetchSnapPost"
+export { fetchMySnapPosts, fetchLikedSnapPosts, fetchSnapPost, fetchSnapPostsByGeographyRange } from "./fetchSnapPost"
 export { deleteSnapPost } from "./deleteSnapPost"
 export { updateSnapPost } from "./updateSnapPost"
 export { likeSnapPost } from "./likeSnapPost"
