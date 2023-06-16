@@ -1,4 +1,5 @@
 import { PostedUser } from "../../domain/PostedUser"
+import { Coordinate } from "../../domain/SnapPost/Coordinate"
 import { PostImages } from "../../domain/SnapPost/PostImages"
 import { SnapPost } from "../../domain/SnapPost/SnapPost"
 import { LikedCount } from "../../domain/SnapPost/likedCount"
@@ -87,13 +88,12 @@ export class SnapPostService {
       params.comment,
       new Date(),
       new Date(),
-      params.longitude,
-      params.latitude,
       params.postImages.map((postImage) => {
         return new PostImages(postImage.imagePath, postImage.tags)
       }),
       new LikedCount(0),
-      postedUser
+      postedUser,
+      new Coordinate(params.longitude, params.latitude)
     )
   }
 }

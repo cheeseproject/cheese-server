@@ -6,6 +6,8 @@ import { dateToTimestamp } from "../../libs/dateToTimestamp"
 import { Snapshot } from "../_types"
 import { LikedCount } from "../../domain/SnapPost/likedCount"
 import { PostedUser } from "../../domain/PostedUser"
+import { Coordinate } from "../../domain/SnapPost/Coordinate"
+import { geohashForLocation } from "geofire-common"
 
 export const LikedSnapPostConverter = {
   toFirestore: (post: SnapPost): DocumentData => {
@@ -17,8 +19,6 @@ export const LikedSnapPostConverter = {
         comment: post.comment ?? null,
         postedAt: dateToTimestamp(post.postedAt),
         updatedAt: dateToTimestamp(post.updatedAt),
-        longitude: post.longitude,
-        latitude: post.latitude,
         postImages: post.postImages.map((image) => {
           return {
             imagePath: image.imagePath,
@@ -30,6 +30,10 @@ export const LikedSnapPostConverter = {
           userId: post.postedUser.userId,
           name: post.postedUser.name,
           iconPath: post.postedUser.iconPath,
+        },
+        coordinate: {
+          geohash: geohashForLocation([post.coordinate.latitude, post.coordinate.longitude]),
+          geopoint: new FirebaseFirestore.GeoPoint(post.coordinate.latitude, post.coordinate.longitude),
         },
       },
     }
@@ -44,13 +48,12 @@ export const LikedSnapPostConverter = {
       snapPost.comment ?? undefined,
       snapPost.postedAt.toDate(),
       snapPost.updatedAt.toDate(),
-      snapPost.longitude,
-      snapPost.latitude,
       snapPost.postImages.map((postImage) => {
         return new PostImages(postImage.imagePath, postImage.tags)
       }),
       new LikedCount(snapPost.likedCount),
-      new PostedUser(snapPost.postedUser.userId, snapPost.postedUser.name, snapPost.postedUser.iconPath)
+      new PostedUser(snapPost.postedUser.userId, snapPost.postedUser.name, snapPost.postedUser.iconPath),
+      new Coordinate(snapPost.coordinate.geopoint.longitude, snapPost.coordinate.geopoint.latitude)
     )
   },
 }

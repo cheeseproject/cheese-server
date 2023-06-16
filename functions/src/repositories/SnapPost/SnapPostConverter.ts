@@ -6,6 +6,8 @@ import { dateToTimestamp } from "../../libs/dateToTimestamp"
 import { Snapshot } from "../_types"
 import { LikedCount } from "../../domain/SnapPost/likedCount"
 import { PostedUser } from "../../domain/PostedUser"
+import { geohashForLocation } from "geofire-common"
+import { Coordinate } from "../../domain/SnapPost/Coordinate"
 
 export const SnapPostConverter = {
   toFirestore: (post: SnapPost): DocumentData => {
@@ -14,8 +16,6 @@ export const SnapPostConverter = {
       comment: post.comment ?? null,
       postedAt: dateToTimestamp(post.postedAt),
       updatedAt: dateToTimestamp(post.updatedAt),
-      longitude: post.longitude,
-      latitude: post.latitude,
       postImages: post.postImages.map((image) => {
         return {
           imagePath: image.imagePath,
@@ -29,6 +29,10 @@ export const SnapPostConverter = {
         iconPath: post.postedUser.iconPath,
       },
       randomIndex: null,
+      coordinate: {
+        geohash: geohashForLocation([post.coordinate.latitude, post.coordinate.longitude]),
+        geopoint: new FirebaseFirestore.GeoPoint(post.coordinate.latitude, post.coordinate.longitude),
+      },
     }
     return documentData
   },
@@ -40,13 +44,12 @@ export const SnapPostConverter = {
       data.comment ?? undefined,
       data.postedAt.toDate(),
       data.updatedAt.toDate(),
-      data.longitude,
-      data.latitude,
       data.postImages.map((postImage) => {
         return new PostImages(postImage.imagePath, postImage.tags)
       }),
       new LikedCount(data.likedCount),
-      new PostedUser(data.postedUser.userId, data.postedUser.name, data.postedUser.iconPath)
+      new PostedUser(data.postedUser.userId, data.postedUser.name, data.postedUser.iconPath),
+      new Coordinate(data.coordinate.geopoint.longitude, data.coordinate.geopoint.latitude)
     )
   },
 }
@@ -57,14 +60,16 @@ export const SnapPostChangeLogConverter = {
       title: post.title,
       comment: post.comment ?? null,
       updatedAt: dateToTimestamp(post.updatedAt),
-      longitude: post.longitude,
-      latitude: post.latitude,
       postImages: post.postImages.map((image) => {
         return {
           imagePath: image.imagePath,
           tags: image.tags,
         }
       }),
+      coordinate: {
+        geohash: geohashForLocation([post.coordinate.latitude, post.coordinate.longitude]),
+        geopoint: new FirebaseFirestore.GeoPoint(post.coordinate.latitude, post.coordinate.longitude),
+      },
     }
     return document
   },

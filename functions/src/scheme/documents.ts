@@ -16,8 +16,6 @@ export type SnapPostDocument = {
   comment: string | null
   postedAt: Timestamp
   updatedAt: Timestamp
-  longitude: number
-  latitude: number
   postImages: {
     imagePath: string
     tags: string[]
@@ -30,6 +28,10 @@ export type SnapPostDocument = {
     iconPath: string
   }
   randomIndex: number | null
+  coordinate: {
+    geohash: string
+    geopoint: FirebaseFirestore.GeoPoint
+  }
 }
 
 // sub collection of users
@@ -56,8 +58,6 @@ export type likedSnapPostDocument = {
     comment: string | null
     postedAt: Timestamp
     updatedAt: Timestamp
-    longitude: number
-    latitude: number
     postImages: {
       imagePath: string
       tags: string[]
@@ -68,6 +68,10 @@ export type likedSnapPostDocument = {
       // userDocument
       name: string
       iconPath: string
+    }
+    coordinate: {
+      geohash: string
+      geopoint: FirebaseFirestore.GeoPoint
     }
   }
 }
@@ -85,12 +89,14 @@ export type SnapPostChangeLogDocument = {
   title: string
   comment: string | null
   updatedAt: Timestamp
-  longitude: number
-  latitude: number
   postImages: {
     imagePath: string
     tags: string[]
   }[]
+  coordinate: {
+    geohash: string
+    geopoint: FirebaseFirestore.GeoPoint
+  }
 }
 
 // sub collection of SnapPosts
