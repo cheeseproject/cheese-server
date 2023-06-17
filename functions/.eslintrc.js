@@ -12,6 +12,7 @@ module.exports = {
     "plugin:import/typescript",
     "google",
     "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
   ],
   parser: "@typescript-eslint/parser",
   parserOptions: {
@@ -31,5 +32,9 @@ module.exports = {
     "max-len": ["error", { code: 120 }],
     semi: ["error", "never"],
     "require-jsdoc": 0,
+    "@typescript-eslint/no-unsafe-assignment": "error",
+    "@typescript-eslint/no-unsafe-member-access": "error",
+    "@typescript-eslint/restrict-plus-operands": "error",
+    "no-console": 1,
   },
 }
