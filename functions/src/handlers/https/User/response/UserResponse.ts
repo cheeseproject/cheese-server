@@ -7,6 +7,7 @@ export const UserResponseScheme = z.object({
   iconPath: z.string(),
   resistedAt: z.string(),
   updatedAt: z.string(),
+  searchedRadiusInM: z.number(),
 })
 
 export type UserResponse = z.infer<typeof UserResponseScheme>
@@ -18,6 +19,7 @@ export const toUserResponse = (user: User): UserResponse => {
     iconPath: user.iconPath,
     resistedAt: user.resistedAt.toISOString(),
     updatedAt: user.updatedAt.toISOString(),
+    searchedRadiusInM: user.searchedRadiusInM,
   }
   return response
 }
