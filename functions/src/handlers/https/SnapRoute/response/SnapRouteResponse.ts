@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { SnapPostResponseScheme } from "../../SnapPost/response/SnapPostResponse"
+import { SnapPostResponseListScheme, toSnapPostResponseList } from "../../SnapPost/response/SnapPostResponse"
 import { SnapRoute } from "../../../../domain/SnapRoute/SnapRoute"
 
 export const SnapRouteResponseScheme = z.object({
@@ -8,7 +8,7 @@ export const SnapRouteResponseScheme = z.object({
   createdUserId: z.string(),
   createdAt: z.string(),
   updatedAt: z.string(),
-  snapPosts: z.array(SnapPostResponseScheme),
+  snapPosts: SnapPostResponseListScheme,
 })
 
 export type SnapRouteResponse = z.infer<typeof SnapRouteResponseScheme>
@@ -20,26 +20,7 @@ export const toSnapRouteResponse = (snapRoute: SnapRoute): SnapRouteResponse => 
     createdUserId: snapRoute.createdUserId,
     createdAt: snapRoute.createdAt.toISOString(),
     updatedAt: snapRoute.updatedAt.toISOString(),
-    snapPosts: snapRoute.snapPosts.map((snapPost) => ({
-      snapPostId: snapPost.snapPostId,
-      userId: snapPost.postedUser.userId,
-      postImages: snapPost.postImages.map((postImage) => ({
-        imagePath: postImage.imagePath,
-        tags: postImage.tags,
-      })),
-      title: snapPost.title,
-      comment: snapPost.comment,
-      longitude: snapPost.longitude,
-      latitude: snapPost.latitude,
-      postedAt: snapPost.postedAt.toISOString(),
-      updatedAt: snapPost.updatedAt.toISOString(),
-      likedCount: snapPost.likedCount.value,
-      postedUser: {
-        userId: snapPost.postedUser.userId,
-        name: snapPost.postedUser.name,
-        iconPath: snapPost.postedUser.iconPath,
-      },
-    })),
+    snapPosts: toSnapPostResponseList(snapRoute.snapPosts),
   }
   return response
 }
