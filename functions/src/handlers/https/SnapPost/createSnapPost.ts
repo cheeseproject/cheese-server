@@ -5,7 +5,7 @@ import { baseFunction } from "../../baseFunction"
 
 const CreateSnapPostRequestScheme = z.object({
   title: z.string(),
-  comment: z.string(),
+  comment: z.string().optional(),
   longitude: z.number(),
   latitude: z.number(),
   postImages: z.array(

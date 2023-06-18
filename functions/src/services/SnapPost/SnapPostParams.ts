@@ -1,6 +1,6 @@
 export type SnapPostParams = {
   title: string
-  comment: string | undefined
+  comment?: string
   longitude: number
   latitude: number
   postImages: {

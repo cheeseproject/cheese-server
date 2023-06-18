@@ -14,7 +14,7 @@ export class User {
     return new PostedUser(this.userId, this.name, this.iconPath)
   }
 
-  public edit(name: string, iconPath: string): User {
-    return new User(this.userId, name, iconPath, this.resistedAt, new Date(), this.searchedRadiusInM)
+  public edit(name: string, iconPath: string, searchedRadiusInM: number): User {
+    return new User(this.userId, name, iconPath, this.resistedAt, new Date(), searchedRadiusInM)
   }
 }
