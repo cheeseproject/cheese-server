@@ -11,7 +11,7 @@ const CreateSnapPostRequestScheme = z.object({
   postImages: z.array(
     z.object({
       imagePath: z.string(),
-      tags: z.array(z.string()),
+      tag: z.string(),
     })
   ),
 })

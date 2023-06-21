@@ -53,7 +53,7 @@ export class SnapPostService {
     const geographicalRange = new GeographicalRange(center, user.searchedRadiusInM)
     const geohashRanges = geographicalRange.bounds()
     const snapPosts = await snapPostRepository.findByNotUserIdAndGeohashRanges(userId, geohashRanges)
-    // NOTE: 偽陽性をフィルタリングする
+    // NOTE: 偽陽性をフィルタリング
     return snapPosts.filter((snapPost) => {
       snapPost.coordinate.isInRange(center, user.searchedRadiusInM)
     })
@@ -68,7 +68,7 @@ export class SnapPostService {
       params.title,
       params.comment,
       params.postImages.map((postImage) => {
-        return new PostImages(postImage.imagePath, postImage.tags)
+        return new PostImages(postImage.imagePath, postImage.tag)
       })
     )
     await snapPostRepository.update(editedSnapPost)
@@ -105,7 +105,7 @@ export class SnapPostService {
       new Date(),
       new Date(),
       params.postImages.map((postImage) => {
-        return new PostImages(postImage.imagePath, postImage.tags)
+        return new PostImages(postImage.imagePath, postImage.tag)
       }),
       new LikedCount(0),
       postedUser,
