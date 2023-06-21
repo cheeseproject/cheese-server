@@ -19,7 +19,7 @@ export const SnapPostConverter = {
       postImages: post.postImages.map((image) => {
         return {
           imagePath: image.imagePath,
-          tags: image.tags,
+          tag: image.tag,
         }
       }),
       likedCount: post.likedCount.value,
@@ -45,7 +45,7 @@ export const SnapPostConverter = {
       data.postedAt.toDate(),
       data.updatedAt.toDate(),
       data.postImages.map((postImage) => {
-        return new PostImages(postImage.imagePath, postImage.tags)
+        return new PostImages(postImage.imagePath, postImage.tag)
       }),
       new LikedCount(data.likedCount),
       new PostedUser(data.postedUser.userId, data.postedUser.name, data.postedUser.iconPath),
@@ -63,7 +63,7 @@ export const SnapPostChangeLogConverter = {
       postImages: post.postImages.map((image) => {
         return {
           imagePath: image.imagePath,
-          tags: image.tags,
+          tag: image.tag,
         }
       }),
       coordinate: {

@@ -19,7 +19,7 @@ export type SnapPostDocument = {
   updatedAt: Timestamp
   postImages: {
     imagePath: string
-    tags: string[]
+    tag: string
   }[]
   likedCount: number
   postedUser: {
@@ -61,7 +61,7 @@ export type likedSnapPostDocument = {
     updatedAt: Timestamp
     postImages: {
       imagePath: string
-      tags: string[]
+      tag: string
     }[]
     likedCount: number
     postedUser: {
@@ -92,7 +92,7 @@ export type SnapPostChangeLogDocument = {
   updatedAt: Timestamp
   postImages: {
     imagePath: string
-    tags: string[]
+    tag: string
   }[]
   coordinate: {
     geohash: string

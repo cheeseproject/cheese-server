@@ -7,7 +7,7 @@ export const SnapPostResponseScheme = z.object({
   postImages: z.array(
     z.object({
       imagePath: z.string(),
-      tags: z.array(z.string()),
+      tag: z.string(),
     })
   ),
   title: z.string(),
@@ -32,7 +32,7 @@ export const toSnapPostResponse = (snapPost: SnapPost): SnapPostResponse => {
     userId: snapPost.postedUser.userId,
     postImages: snapPost.postImages.map((postImage) => ({
       imagePath: postImage.imagePath,
-      tags: postImage.tags,
+      tag: postImage.tag,
     })),
     title: snapPost.title,
     comment: snapPost.comment,
