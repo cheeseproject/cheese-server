@@ -1,4 +1,4 @@
-import { DocumentData } from "firebase-admin/firestore"
+import { DocumentData, GeoPoint } from "firebase-admin/firestore"
 import { PostImages } from "../../domain/SnapPost/PostImages"
 import { SnapPost } from "../../domain/SnapPost/SnapPost"
 import { SnapPostChangeLogDocument, SnapPostDocument } from "../../scheme"
@@ -19,9 +19,9 @@ export const SnapPostConverter = {
       postImages: post.postImages.map((image) => {
         return {
           imagePath: image.imagePath,
-          tag: image.tag,
         }
       }),
+      tags: post.tags,
       likedCount: post.likedCount.value,
       postedUser: {
         userId: post.postedUser.userId,
@@ -31,7 +31,7 @@ export const SnapPostConverter = {
       randomIndex: null,
       coordinate: {
         geohash: geohashForLocation([post.coordinate.latitude, post.coordinate.longitude]),
-        geopoint: new FirebaseFirestore.GeoPoint(post.coordinate.latitude, post.coordinate.longitude),
+        geopoint: new GeoPoint(post.coordinate.latitude, post.coordinate.longitude),
       },
     }
     return documentData
@@ -45,8 +45,9 @@ export const SnapPostConverter = {
       data.postedAt.toDate(),
       data.updatedAt.toDate(),
       data.postImages.map((postImage) => {
-        return new PostImages(postImage.imagePath, postImage.tag)
+        return new PostImages(postImage.imagePath)
       }),
+      data.tags,
       new LikedCount(data.likedCount),
       new PostedUser(data.postedUser.userId, data.postedUser.name, data.postedUser.iconPath),
       new Coordinate(data.coordinate.geopoint.longitude, data.coordinate.geopoint.latitude)
@@ -60,16 +61,6 @@ export const SnapPostChangeLogConverter = {
       title: post.title,
       comment: post.comment ?? null,
       updatedAt: dateToTimestamp(post.updatedAt),
-      postImages: post.postImages.map((image) => {
-        return {
-          imagePath: image.imagePath,
-          tag: image.tag,
-        }
-      }),
-      coordinate: {
-        geohash: geohashForLocation([post.coordinate.latitude, post.coordinate.longitude]),
-        geopoint: new FirebaseFirestore.GeoPoint(post.coordinate.latitude, post.coordinate.longitude),
-      },
     }
     return document
   },

@@ -19,8 +19,8 @@ export type SnapPostDocument = {
   updatedAt: Timestamp
   postImages: {
     imagePath: string
-    tag: string
   }[]
+  tags: string[]
   likedCount: number
   postedUser: {
     userId: string
@@ -61,8 +61,8 @@ export type likedSnapPostDocument = {
     updatedAt: Timestamp
     postImages: {
       imagePath: string
-      tag: string
     }[]
+    tags: string[]
     likedCount: number
     postedUser: {
       userId: string
@@ -90,14 +90,6 @@ export type SnapPostChangeLogDocument = {
   title: string
   comment: string | null
   updatedAt: Timestamp
-  postImages: {
-    imagePath: string
-    tag: string
-  }[]
-  coordinate: {
-    geohash: string
-    geopoint: FirebaseFirestore.GeoPoint
-  }
 }
 
 // sub collection of SnapPosts

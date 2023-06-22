@@ -12,9 +12,9 @@ const UpdateSnapPostRequestScheme = z.object({
   postImages: z.array(
     z.object({
       imagePath: z.string(),
-      tag: z.string(),
     })
   ),
+  tags: z.array(z.string()),
 })
 
 export const updateSnapPost = baseFunction(async (data, context) => {

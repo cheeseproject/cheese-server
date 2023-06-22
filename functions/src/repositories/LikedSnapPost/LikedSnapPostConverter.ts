@@ -22,9 +22,9 @@ export const LikedSnapPostConverter = {
         postImages: post.postImages.map((image) => {
           return {
             imagePath: image.imagePath,
-            tag: image.tag,
           }
         }),
+        tags: post.tags,
         likedCount: post.likedCount.value,
         postedUser: {
           userId: post.postedUser.userId,
@@ -49,8 +49,9 @@ export const LikedSnapPostConverter = {
       snapPost.postedAt.toDate(),
       snapPost.updatedAt.toDate(),
       snapPost.postImages.map((postImage) => {
-        return new PostImages(postImage.imagePath, postImage.tag)
+        return new PostImages(postImage.imagePath)
       }),
+      snapPost.tags,
       new LikedCount(snapPost.likedCount),
       new PostedUser(snapPost.postedUser.userId, snapPost.postedUser.name, snapPost.postedUser.iconPath),
       new Coordinate(snapPost.coordinate.geopoint.longitude, snapPost.coordinate.geopoint.latitude)

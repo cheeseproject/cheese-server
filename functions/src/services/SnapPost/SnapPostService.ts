@@ -68,8 +68,9 @@ export class SnapPostService {
       params.title,
       params.comment,
       params.postImages.map((postImage) => {
-        return new PostImages(postImage.imagePath, postImage.tag)
-      })
+        return new PostImages(postImage.imagePath)
+      }),
+      params.tags
     )
     await snapPostRepository.update(editedSnapPost)
   }
@@ -105,8 +106,9 @@ export class SnapPostService {
       new Date(),
       new Date(),
       params.postImages.map((postImage) => {
-        return new PostImages(postImage.imagePath, postImage.tag)
+        return new PostImages(postImage.imagePath)
       }),
+      params.tags,
       new LikedCount(0),
       postedUser,
       new Coordinate(params.longitude, params.latitude)
