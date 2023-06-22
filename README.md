@@ -58,7 +58,6 @@ https://console.cloud.google.com/firestore/databases/-default-/import-export?aut
 gcloud firestore export gs://[firebaseのID].appspot.com
 ```
 
-https://console.cloud.google.com/storage/browser?hl=ja&_ga=2.195952553.485843308.1679557880-1179231328.1670742834&prefix=&authuser=2&project=nexussquare-stg
 
 ## index 編集
 
