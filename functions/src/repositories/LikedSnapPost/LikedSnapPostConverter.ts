@@ -1,4 +1,4 @@
-import { DocumentData } from "firebase-admin/firestore"
+import { DocumentData, GeoPoint } from "firebase-admin/firestore"
 import { PostImages } from "../../domain/SnapPost/PostImages"
 import { SnapPost } from "../../domain/SnapPost/SnapPost"
 import { likedSnapPostDocument } from "../../scheme"
@@ -35,7 +35,7 @@ export const LikedSnapPostConverter = {
         },
         coordinate: {
           geohash: geohashForLocation([post.coordinate.latitude.value, post.coordinate.longitude.value]),
-          geopoint: new FirebaseFirestore.GeoPoint(post.coordinate.latitude.value, post.coordinate.longitude.value),
+          geopoint: new GeoPoint(post.coordinate.latitude.value, post.coordinate.longitude.value),
         },
       },
     }
