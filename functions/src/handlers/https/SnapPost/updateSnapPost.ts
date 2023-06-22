@@ -7,14 +7,6 @@ const UpdateSnapPostRequestScheme = z.object({
   snapPostId: z.string(),
   title: z.string(),
   comment: z.string(),
-  longitude: z.number(),
-  latitude: z.number(),
-  postImages: z.array(
-    z.object({
-      imagePath: z.string(),
-      tag: z.string(),
-    })
-  ),
 })
 
 export const updateSnapPost = baseFunction(async (data, context) => {

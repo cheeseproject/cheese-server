@@ -5,6 +5,11 @@ export type SnapPostParams = {
   latitude: number
   postImages: {
     imagePath: string
-    tag: string
   }[]
+  tags: string[]
+}
+
+export type SnapPostUpdateParams = {
+  title: string
+  comment?: string
 }

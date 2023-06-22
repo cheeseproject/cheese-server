@@ -11,9 +11,9 @@ const CreateSnapPostRequestScheme = z.object({
   postImages: z.array(
     z.object({
       imagePath: z.string(),
-      tag: z.string(),
     })
   ),
+  tags: z.array(z.string()),
 })
 
 export const createSnapPost = baseFunction(async (data, context) => {

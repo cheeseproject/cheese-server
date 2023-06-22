@@ -11,19 +11,21 @@ export class SnapPost {
     readonly postedAt: Date,
     readonly updatedAt: Date,
     readonly postImages: PostImages[],
+    readonly tags: string[],
     readonly likedCount: LikedCount,
     readonly postedUser: PostedUser,
     readonly coordinate: Coordinate
   ) {}
 
-  public edited(title: string, comment: string | undefined, postImages: PostImages[]): SnapPost {
+  public edited(title: string, comment: string | undefined): SnapPost {
     return new SnapPost(
       this.snapPostId,
       title,
       comment,
       this.postedAt,
       new Date(),
-      postImages,
+      this.postImages,
+      this.tags,
       this.likedCount,
       this.postedUser,
       this.coordinate
@@ -38,6 +40,7 @@ export class SnapPost {
       this.postedAt,
       this.updatedAt,
       this.postImages,
+      this.tags,
       this.likedCount.increment(),
       this.postedUser,
       this.coordinate
