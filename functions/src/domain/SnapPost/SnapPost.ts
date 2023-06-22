@@ -17,15 +17,15 @@ export class SnapPost {
     readonly coordinate: Coordinate
   ) {}
 
-  public edited(title: string, comment: string | undefined, postImages: PostImages[], tags: string[]): SnapPost {
+  public edited(title: string, comment: string | undefined): SnapPost {
     return new SnapPost(
       this.snapPostId,
       title,
       comment,
       this.postedAt,
       new Date(),
-      postImages,
-      tags,
+      this.postImages,
+      this.tags,
       this.likedCount,
       this.postedUser,
       this.coordinate

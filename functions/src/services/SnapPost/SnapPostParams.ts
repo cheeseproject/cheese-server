@@ -8,3 +8,8 @@ export type SnapPostParams = {
   }[]
   tags: string[]
 }
+
+export type SnapPostUpdateParams = {
+  title: string
+  comment?: string
+}

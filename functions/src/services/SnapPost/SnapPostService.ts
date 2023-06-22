@@ -9,7 +9,7 @@ import { generateId } from "../../libs/generateId"
 import { likedSnapPostRepository } from "../../repositories/LikedSnapPost/LikedSnapPostRepository"
 import { snapPostRepository } from "../../repositories/SnapPost/SnapPostRepository"
 import { userRepository } from "../../repositories/User/UserRepository"
-import { SnapPostParams } from "./SnapPostParams"
+import { SnapPostParams, SnapPostUpdateParams } from "./SnapPostParams"
 
 export class SnapPostService {
   public async save(params: SnapPostParams, userId: string): Promise<void> {
@@ -59,19 +59,12 @@ export class SnapPostService {
     })
   }
 
-  public async update(params: SnapPostParams, userId: string, snapPostId: string): Promise<void> {
+  public async update(params: SnapPostUpdateParams, userId: string, snapPostId: string): Promise<void> {
     const snapPost = await snapPostRepository.findByIdAndUserId(userId, snapPostId)
     if (!snapPost) {
       Exception.notFound("snap post")
     }
-    const editedSnapPost = snapPost.edited(
-      params.title,
-      params.comment,
-      params.postImages.map((postImage) => {
-        return new PostImages(postImage.imagePath)
-      }),
-      params.tags
-    )
+    const editedSnapPost = snapPost.edited(params.title, params.comment)
     await snapPostRepository.update(editedSnapPost)
   }
 
