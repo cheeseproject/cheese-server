@@ -5,6 +5,6 @@ export class GeographicalRange {
   constructor(readonly center: Coordinate, readonly radiusInM: number) {}
 
   public bounds(): GeohashRange[] {
-    return geohashQueryBounds([this.center.latitude, this.center.longitude], this.radiusInM)
+    return geohashQueryBounds([this.center.latitude.value, this.center.longitude.value], this.radiusInM)
   }
 }
