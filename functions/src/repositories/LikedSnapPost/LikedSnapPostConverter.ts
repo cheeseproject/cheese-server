@@ -1,4 +1,4 @@
-import { DocumentData } from "firebase-admin/firestore"
+import { DocumentData, GeoPoint } from "firebase-admin/firestore"
 import { PostImages } from "../../domain/SnapPost/PostImages"
 import { SnapPost } from "../../domain/SnapPost/SnapPost"
 import { likedSnapPostDocument } from "../../scheme"
@@ -8,6 +8,8 @@ import { LikedCount } from "../../domain/SnapPost/likedCount"
 import { PostedUser } from "../../domain/PostedUser"
 import { Coordinate } from "../../domain/SnapPost/Coordinate"
 import { geohashForLocation } from "geofire-common"
+import { Latitude } from "../../domain/SnapPost/Latitude"
+import { Longitude } from "../../domain/SnapPost/Longitude"
 
 export const LikedSnapPostConverter = {
   toFirestore: (post: SnapPost): DocumentData => {
@@ -32,8 +34,8 @@ export const LikedSnapPostConverter = {
           iconPath: post.postedUser.iconPath,
         },
         coordinate: {
-          geohash: geohashForLocation([post.coordinate.latitude, post.coordinate.longitude]),
-          geopoint: new FirebaseFirestore.GeoPoint(post.coordinate.latitude, post.coordinate.longitude),
+          geohash: geohashForLocation([post.coordinate.latitude.value, post.coordinate.longitude.value]),
+          geopoint: new GeoPoint(post.coordinate.latitude.value, post.coordinate.longitude.value),
         },
       },
     }
@@ -54,7 +56,10 @@ export const LikedSnapPostConverter = {
       snapPost.tags,
       new LikedCount(snapPost.likedCount),
       new PostedUser(snapPost.postedUser.userId, snapPost.postedUser.name, snapPost.postedUser.iconPath),
-      new Coordinate(snapPost.coordinate.geopoint.longitude, snapPost.coordinate.geopoint.latitude)
+      new Coordinate(
+        new Latitude(snapPost.coordinate.geopoint.latitude),
+        new Longitude(snapPost.coordinate.geopoint.longitude)
+      )
     )
   },
 }

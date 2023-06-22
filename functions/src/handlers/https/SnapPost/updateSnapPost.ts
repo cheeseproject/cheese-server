@@ -6,7 +6,7 @@ import { baseFunction } from "../../baseFunction"
 const UpdateSnapPostRequestScheme = z.object({
   snapPostId: z.string(),
   title: z.string(),
-  comment: z.string(),
+  comment: z.string().optional(),
 })
 
 export const updateSnapPost = baseFunction(async (data, context) => {

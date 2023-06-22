@@ -55,20 +55,19 @@ export class SnapPostRepository {
     return snapshot.docs.map((doc) => doc.data())
   }
 
-  public async findByNotUserIdAndGeohashRanges(userId: string, geohashRanges: GeohashRange[]): Promise<SnapPost[]> {
+  public async findByNotUserIdAndGeohashRanges(geohashRanges: GeohashRange[]): Promise<SnapPost[]> {
     // NOTE: 参照先
     // NOTE: https://firebase.google.com/docs/firestore/solutions/geoqueries?hl=ja#solution_geohashes
     const snapPosts: SnapPost[] = []
-    geohashRanges.forEach(async (range) => {
+    for (const range of geohashRanges) {
       const snapshot = await references.snapPosts.ref
-        .where("postedUser.userId", "!=", userId)
         .orderBy("coordinate.geohash")
         .startAt(range[0])
         .endAt(range[1])
         .withConverter(SnapPostConverter)
         .get()
       snapPosts.push(...snapshot.docs.map((doc) => doc.data()))
-    })
+    }
     return snapPosts
   }
 

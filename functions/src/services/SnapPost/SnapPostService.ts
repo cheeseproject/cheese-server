@@ -1,6 +1,8 @@
 import { PostedUser } from "../../domain/PostedUser"
 import { Coordinate } from "../../domain/SnapPost/Coordinate"
 import { GeographicalRange } from "../../domain/SnapPost/GeographicalRange"
+import { Latitude } from "../../domain/SnapPost/Latitude"
+import { Longitude } from "../../domain/SnapPost/Longitude"
 import { PostImages } from "../../domain/SnapPost/PostImages"
 import { SnapPost } from "../../domain/SnapPost/SnapPost"
 import { LikedCount } from "../../domain/SnapPost/likedCount"
@@ -45,17 +47,17 @@ export class SnapPostService {
   }
 
   public async findByGeographyRange(userId: string, latitude: number, longitude: number): Promise<SnapPost[]> {
-    const center = new Coordinate(latitude, longitude)
+    const center = new Coordinate(new Latitude(latitude), new Longitude(longitude))
     const user = await userRepository.findById(userId)
     if (!user) {
       Exception.notFound("user")
     }
     const geographicalRange = new GeographicalRange(center, user.searchedRadiusInM)
     const geohashRanges = geographicalRange.bounds()
-    const snapPosts = await snapPostRepository.findByNotUserIdAndGeohashRanges(userId, geohashRanges)
-    // NOTE: 偽陽性をフィルタリング
+    const snapPosts = await snapPostRepository.findByNotUserIdAndGeohashRanges(geohashRanges)
+    // NOTE: 偽陽性をフィルタリングと自分のもをフィルタリング
     return snapPosts.filter((snapPost) => {
-      snapPost.coordinate.isInRange(center, user.searchedRadiusInM)
+      return snapPost.coordinate.isInRange(center, user.searchedRadiusInM) && snapPost.isMine(userId)
     })
   }
 
@@ -104,7 +106,7 @@ export class SnapPostService {
       params.tags,
       new LikedCount(0),
       postedUser,
-      new Coordinate(params.longitude, params.latitude)
+      new Coordinate(new Latitude(params.latitude), new Longitude(params.longitude))
     )
   }
 }
