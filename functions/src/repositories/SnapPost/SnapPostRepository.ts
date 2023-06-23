@@ -39,6 +39,7 @@ export class SnapPostRepository {
   }
 
   public async findByIds(snapPostIds: string[]): Promise<SnapPost[]> {
+    if (snapPostIds.length === 0) return []
     const snapshot = await references.snapPosts.ref
       .where(FieldPath.documentId(), "in", snapPostIds)
       .withConverter(SnapPostConverter)
@@ -55,7 +56,7 @@ export class SnapPostRepository {
     return snapshot.docs.map((doc) => doc.data())
   }
 
-  public async findByNotUserIdAndGeohashRanges(geohashRanges: GeohashRange[]): Promise<SnapPost[]> {
+  public async findByGeohashRanges(geohashRanges: GeohashRange[]): Promise<SnapPost[]> {
     // NOTE: 参照先
     // NOTE: https://firebase.google.com/docs/firestore/solutions/geoqueries?hl=ja#solution_geohashes
     const snapPosts: SnapPost[] = []

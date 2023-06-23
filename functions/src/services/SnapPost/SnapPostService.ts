@@ -54,10 +54,10 @@ export class SnapPostService {
     }
     const geographicalRange = new GeographicalRange(center, user.searchedRadiusInM)
     const geohashRanges = geographicalRange.bounds()
-    const snapPosts = await snapPostRepository.findByNotUserIdAndGeohashRanges(geohashRanges)
+    const snapPosts = await snapPostRepository.findByGeohashRanges(geohashRanges)
     // NOTE: 偽陽性をフィルタリングと自分のもをフィルタリング
     return snapPosts.filter((snapPost) => {
-      return snapPost.coordinate.isInRange(center, user.searchedRadiusInM) && snapPost.isMine(userId)
+      return snapPost.coordinate.isInRange(center, user.searchedRadiusInM) && !snapPost.isMine(userId)
     })
   }
 
