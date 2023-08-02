@@ -58,7 +58,6 @@ https://console.cloud.google.com/firestore/databases/-default-/import-export?aut
 gcloud firestore export gs://[firebaseのID].appspot.com
 ```
 
-
 ## index 編集
 
 エクスポート

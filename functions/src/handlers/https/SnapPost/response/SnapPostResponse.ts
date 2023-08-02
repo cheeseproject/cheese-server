@@ -22,6 +22,7 @@ export const SnapPostResponseScheme = z.object({
     name: z.string(),
     iconPath: z.string(),
   }),
+  address: z.string(),
 })
 
 export type SnapPostResponse = z.infer<typeof SnapPostResponseScheme>
@@ -33,7 +34,7 @@ export const toSnapPostResponse = (snapPost: SnapPost): SnapPostResponse => {
     postImages: snapPost.postImages.map((postImage) => ({
       imagePath: postImage.imagePath,
     })),
-    tags: snapPost.tags,
+    tags: snapPost.tags.map((tag) => tag.value),
     title: snapPost.title,
     comment: snapPost.comment,
     longitude: snapPost.coordinate.longitude.value,
@@ -46,6 +47,7 @@ export const toSnapPostResponse = (snapPost: SnapPost): SnapPostResponse => {
       name: snapPost.postedUser.name,
       iconPath: snapPost.postedUser.iconPath,
     },
+    address: snapPost.address,
   }
   return response
 }

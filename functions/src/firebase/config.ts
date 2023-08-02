@@ -7,5 +7,9 @@ export const REGION = "asia-northeast1"
 export const TIME_ZONE = "Asia/Tokyo"
 process.env.TZ = TIME_ZONE
 functions.config().firebase = { ignoreUndefinedProperties: false }
-
+export const config = functions.config() as {
+  yahoo: {
+    api_key: string
+  }
+}
 export { functions }

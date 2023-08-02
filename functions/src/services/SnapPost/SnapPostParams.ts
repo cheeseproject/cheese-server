@@ -7,6 +7,7 @@ export type SnapPostParams = {
     imagePath: string
   }[]
   tags: string[]
+  address: string
 }
 
 export type SnapPostUpdateParams = {

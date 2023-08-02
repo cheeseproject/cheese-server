@@ -4,6 +4,7 @@ import { GeographicalRange } from "../../domain/SnapPost/GeographicalRange"
 import { Latitude } from "../../domain/SnapPost/Latitude"
 import { Longitude } from "../../domain/SnapPost/Longitude"
 import { PostImages } from "../../domain/SnapPost/PostImages"
+import { PostTag } from "../../domain/SnapPost/PostTag"
 import { SnapPost } from "../../domain/SnapPost/SnapPost"
 import { LikedCount } from "../../domain/SnapPost/likedCount"
 import { Exception } from "../../libs/Exception"
@@ -103,10 +104,13 @@ export class SnapPostService {
       params.postImages.map((postImage) => {
         return new PostImages(postImage.imagePath)
       }),
-      params.tags,
+      params.tags.map((tag) => {
+        return new PostTag(tag)
+      }),
       new LikedCount(0),
       postedUser,
-      new Coordinate(new Latitude(params.latitude), new Longitude(params.longitude))
+      new Coordinate(new Latitude(params.latitude), new Longitude(params.longitude)),
+      params.address
     )
   }
 }

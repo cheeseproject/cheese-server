@@ -14,6 +14,7 @@ const CreateSnapPostRequestScheme = z.object({
     })
   ),
   tags: z.array(z.string()),
+  address: z.string(),
 })
 
 export const createSnapPost = baseFunction(async (data, context) => {
