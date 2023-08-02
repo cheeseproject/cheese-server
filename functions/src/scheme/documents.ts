@@ -33,6 +33,7 @@ export type SnapPostDocument = {
     geohash: string
     geopoint: FirebaseFirestore.GeoPoint
   }
+  address: string
 }
 
 // sub collection of users
@@ -74,6 +75,7 @@ export type likedSnapPostDocument = {
       geohash: string
       geopoint: FirebaseFirestore.GeoPoint
     }
+    address: string
   }
 }
 

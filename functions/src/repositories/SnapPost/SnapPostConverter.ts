@@ -10,6 +10,7 @@ import { geohashForLocation } from "geofire-common"
 import { Coordinate } from "../../domain/SnapPost/Coordinate"
 import { Latitude } from "../../domain/SnapPost/Latitude"
 import { Longitude } from "../../domain/SnapPost/Longitude"
+import { PostTag } from "../../domain/SnapPost/PostTag"
 
 export const SnapPostConverter = {
   toFirestore: (post: SnapPost): DocumentData => {
@@ -23,7 +24,9 @@ export const SnapPostConverter = {
           imagePath: image.imagePath,
         }
       }),
-      tags: post.tags,
+      tags: post.tags.map((tag) => {
+        return tag.value
+      }),
       likedCount: post.likedCount.value,
       postedUser: {
         userId: post.postedUser.userId,
@@ -35,6 +38,7 @@ export const SnapPostConverter = {
         geohash: geohashForLocation([post.coordinate.latitude.value, post.coordinate.longitude.value]),
         geopoint: new GeoPoint(post.coordinate.latitude.value, post.coordinate.longitude.value),
       },
+      address: post.address,
     }
     return documentData
   },
@@ -49,10 +53,16 @@ export const SnapPostConverter = {
       data.postImages.map((postImage) => {
         return new PostImages(postImage.imagePath)
       }),
-      data.tags,
+      data.tags.map((tag) => {
+        return new PostTag(tag)
+      }),
       new LikedCount(data.likedCount),
       new PostedUser(data.postedUser.userId, data.postedUser.name, data.postedUser.iconPath),
-      new Coordinate(new Latitude(data.coordinate.geopoint.latitude), new Longitude(data.coordinate.geopoint.longitude))
+      new Coordinate(
+        new Latitude(data.coordinate.geopoint.latitude),
+        new Longitude(data.coordinate.geopoint.longitude)
+      ),
+      data.address
     )
   },
 }
